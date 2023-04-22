@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Before / After Audio Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="m-0 font-sans bg-[var(--primary-color)] p-4">
+    <div class="max-w-screen-sm mx-auto">
+      <div class="flex flex-col items-center">
+        <canvas class="bg-red-400 h-20 w-full" id="waveform"></canvas>
+        <div class="flex items-center mt-4">
+          <button
+            id="prev-button"
+            class="cursor-pointer border-0 box-border h-12 w-12 bg-white rounded-full p-3 text-gray-700 shadow-md hover:bg-[var(--accent-color)] hover:text-white/90"
+          >
+            <svg
+              class="mr-0.5 mt-0.25"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewbox="0 0 512 512"
+            >
+              <path
+                d="M459.5 440.6c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4L288 214.3V256v41.7L459.5 440.6zM256 352V256 128 96c0-12.4-7.2-23.7-18.4-29s-24.5-3.6-34.1 4.4l-192 160C4.2 237.5 0 246.5 0 256s4.2 18.5 11.5 24.6l192 160c9.5 7.9 22.8 9.7 34.1 4.4s18.4-16.6 18.4-29V352z"
+              />
+            </svg>
+          </button>
+          <button
+            id="play-button"
+            class="cursor-pointer border-0 box-border h-16 w-16 bg-white rounded-full p-4 text-gray-700 shadow-md mx-2 hover:bg-[var(--accent-color)] hover:text-white/90"
+          >
+            <svg
+              class="h-8 w-8 ml-0.5"
+              id="play-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewbox="0 0 384 512"
+            >
+              <path
+                d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
+              />
+            </svg>
+            <svg
+              class="h-8 w-8 hidden"
+              id="pause-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 320 512"
+            >
+              <path
+                d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"
+              />
+            </svg>
+          </button>
+          <button
+            id="next-button"
+            class="cursor-pointer border-0 box-border h-12 w-12 bg-white rounded-full p-3 text-gray-700 shadow-md hover:bg-[var(--accent-color)] hover:text-white/90"
+          >
+            <svg
+              class="ml-0.5 mt-0.25"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewbox="0 0 512 512"
+            >
+              <path
+                d="M52.5 440.6c-9.5 7.9-22.8 9.7-34.1 4.4S0 428.4 0 416V96C0 83.6 7.2 72.3 18.4 67s24.5-3.6 34.1 4.4L224 214.3V256v41.7L52.5 440.6zM256 352V256 128 96c0-12.4 7.2-23.7 18.4-29s24.5-3.6 34.1 4.4l192 160c7.3 6.1 11.5 15.1 11.5 24.6s-4.2 18.5-11.5 24.6l-192 160c-9.5 7.9-22.8 9.7-34.1 4.4s-18.4-16.6-18.4-29V352z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="text-white/40 mt-4">
+          <span id="time-current">00:00</span> /
+          <span id="time-total">00:00</span>
+        </div>
+        <div class="mt-4 flex items-center">
+          <div
+            class="text-white uppercase tracking-wider text-xs w-24 text-right"
+          >
+            Before
+          </div>
+          <label class="switch mx-2">
+            <input
+              type="checkbox"
+              class="switch-input"
+              id="before-after-toggle"
+            />
+            <span class="switch-color"></span>
+            <span class="switch-handle"></span>
+          </label>
+          <div class="text-white uppercase tracking-wider text-xs w-24">
+            After
+          </div>
+        </div>
+      </div>
+      <div id="audio-list" class="mt-4">
+        <template id="audio-list-item">
+          <div
+            class="flex items-center mb-4 group cursor-pointer hover:bg-white/10 rounded-md"
+          >
+            <button
+              class="cursor-pointer border-0 bg-transparent box-border flex items-center justify-center h-12 w-12 p-2 text-white/90 mr-4 audio-item-play group-hover:text-[var(--accent-color)]"
+            >
+              <svg
+                class="max-w-full max-h-full"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewbox="0 0 384 512"
+              >
+                <path
+                  d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"
+                />
+              </svg>
+            </button>
+            <div class="audio-item-title flex-grow text-white/70 text-xl">
+              Title of the audio file
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+    <script lang="text/javascript" src="./script.js"></script>
+  </body>
+</html>
