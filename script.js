@@ -18,17 +18,19 @@
 
   const $audioItem = document.getElementById("audio-list-item");
   const $audioList = document.getElementById("audio-list");
+  const $audioItems = [];
   function renderAudioFiles() {
     files.forEach((file, i) => {
       const $newAudioItem = $audioItem.content.cloneNode(true);
       $newAudioItemRoot = $newAudioItem.firstElementChild;
       $newAudioItem.querySelector(".audio-item-title").innerText = file.title;
-      $newAudioItem.querySelector(".audio-item-play");
+      // $newAudioItem.querySelector(".audio-item-play");
       console.log($newAudioItem);
       $newAudioItemRoot.addEventListener("click", () => {
         loadFile(i, true);
       });
       $audioList.appendChild($newAudioItem);
+      $audioItems.push($newAudioItemRoot);
     });
   }
   renderAudioFiles();
@@ -44,12 +46,31 @@
 
   $beforeAfterToggle.addEventListener("change", setCurrentPlayfile);
   $playButton.addEventListener("click", playPauseFile);
+  $nextButton.addEventListener("click", () => {
+    loadFile(fileIndex + 1, true);
+  });
+  $prevButton.addEventListener("click", () => {
+    loadFile(fileIndex - 1, true);
+  });
 
   let before = null;
   let after = null;
   let current = null;
+  let fileIndex = 0;
 
   function loadFile(index, play) {
+    if (index < 0) {
+      index = files.length - 1;
+    } else if (index >= files.length) {
+      index = 0;
+    }
+
+    if ($audioItems[fileIndex]) {
+      $audioItems[fileIndex].classList.remove("playing");
+    }
+    $audioItems[index].classList.add("playing");
+
+    fileIndex = index;
     if (before) {
       before.pause();
       before.src = "";

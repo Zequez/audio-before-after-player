@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+.audio-list-item.playing {
+  background: rgba(255,255,255,0.1);
+}
+
 .switch {
   background-color: hsla(0 0% 100% / 0.9);
   border-radius: 18px;
