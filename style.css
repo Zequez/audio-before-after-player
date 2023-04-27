@@ -69,10 +69,12 @@
   height: 16px;
   border-radius: 50%;
   background-color: white;
+  transition: transform 0.25s;
 }
 
 #scrub-control::-webkit-slider-thumb:hover {
   background-color: var(--accent-color);
+  transform: scale(1.2);
 }
 
 #scrub-control:active {
