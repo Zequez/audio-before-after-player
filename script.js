@@ -44,28 +44,56 @@
   const $timeCurrent = $$("time-current");
   const $timeTotal = $$("time-total");
   const $beforeAfterToggle = $$("before-after-toggle");
-
-  $beforeAfterToggle.addEventListener("change", setCurrentPlayfile);
-  $playButton.addEventListener("click", playPauseFile);
-  $nextButton.addEventListener("click", () => {
-    loadFile(fileIndex + 1, true);
-  });
-  $prevButton.addEventListener("click", () => {
-    loadFile(fileIndex - 1, true);
-  });
+  const $scrubControl = $$("scrub-control");
 
   let before = null;
   let after = null;
   let current = null;
   let fileIndex = 0;
 
+  bindEvents();
   loadFile(0);
 
-  setInterval(() => {
-    if (current && !current.paused) {
-      $timeCurrent.innerText = formatDuration(current.currentTime);
-    }
-  }, 100);
+  function bindEvents() {
+    $beforeAfterToggle.addEventListener("change", setCurrentPlayfile);
+    $playButton.addEventListener("click", playPauseFile);
+    $nextButton.addEventListener("click", () => {
+      loadFile(fileIndex + 1, true);
+    });
+    $prevButton.addEventListener("click", () => {
+      loadFile(fileIndex - 1, true);
+    });
+
+    let lastTimeSet = 0;
+    let scrubTimeout = null;
+    setInterval(() => {
+      if (current && lastTimeSet !== current.currentTime) {
+        lastTimeSet = current.currentTime;
+        $timeCurrent.innerText = formatDuration(current.currentTime);
+        if (!scrubTimeout) {
+          $scrubControl.value = current.currentTime / current.duration;
+        }
+      }
+    }, 100);
+
+    // Add input event listener to $scrubControl
+    // Update the audio currentTime
+    // And pause the audio while scrubbing using a 50ms timeout
+    // to prevent the audio from playing while scrubbing
+    $scrubControl.addEventListener("input", (e) => {
+      const scrubTime = parseFloat(e.target.value) * current.duration;
+      current.currentTime = scrubTime;
+      if (!current.paused || scrubTimeout) {
+        if (scrubTimeout) clearTimeout(scrubTimeout);
+        if (!current.paused) current.pause();
+        scrubTimeout = setTimeout(() => {
+          current.play();
+          scrubTimeout = null;
+        }, 50);
+      }
+      // current.pause()
+    });
+  }
 
   function loadFile(index, play) {
     if (index < 0) {
@@ -90,11 +118,13 @@
     }
     before = new Audio(files[index].before);
     after = new Audio(files[index].after);
+    $timeCurrent.innerText = "00:00";
     setCurrentPlayfile();
     if (play) {
       current.play();
       setPlayIcon();
     }
+    // before.addEventListener()
   }
 
   function setCurrentPlayfile() {
@@ -117,10 +147,19 @@
     setTotalTime();
   }
 
+  function setCurrentTime() {}
+
   function setTotalTime() {
-    current.addEventListener("loadedmetadata", () => {
+    if (current.duration) {
       $timeTotal.innerText = formatDuration(current.duration);
-    });
+    } else {
+      $timeTotal.innerText = "--:--";
+      // $timeCurrent.innerText = "--:--";
+      current.addEventListener("loadedmetadata", () => {
+        $timeTotal.innerText = formatDuration(current.duration);
+        // $timeCurrent.innerText = formatDuration(current.currentTime);
+      });
+    }
   }
 
   function playPauseFile(forcePlay) {

@@ -52,3 +52,29 @@
 .switch-input:checked ~ .switch-handle {
   left: 26px;
 }
+
+#scrub-control {
+  width: 100%;
+  -webkit-appearance: none;
+  background-color: rgba(0,0,0,0.25);
+  height: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#scrub-control::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+#scrub-control::-webkit-slider-thumb:hover {
+  background-color: var(--accent-color);
+}
+
+#scrub-control:active {
+  cursor: grabbing;
+}
