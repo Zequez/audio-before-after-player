@@ -7,10 +7,12 @@
       .then((res) => res.text())
       .then((text) => {
         const lines = text.split("\n");
-        return lines.map((line) => {
-          const [title, before, after] = line.split(/\s*,\s*/);
-          return { title, before, after };
-        });
+        return lines
+          .map((line) => {
+            const [title, before, after] = line.split(/\s*,\s*/);
+            return { title, before, after };
+          })
+          .filter(({ title, before, after }) => title && before && after);
       });
   }
 
