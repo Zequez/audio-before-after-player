@@ -61,7 +61,12 @@
       loadFile(fileIndex + 1, true);
     });
     $prevButton.addEventListener("click", () => {
-      loadFile(fileIndex - 1, true);
+      console.log(current.currentTime);
+      if (current.currentTime < 3) {
+        loadFile(fileIndex - 1, true);
+      } else {
+        current.currentTime = 0;
+      }
     });
 
     let lastTimeSet = 0;
