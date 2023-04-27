@@ -71,7 +71,11 @@
         lastTimeSet = current.currentTime;
         $timeCurrent.innerText = formatDuration(current.currentTime);
         if (!scrubTimeout) {
-          $scrubControl.value = current.currentTime / current.duration;
+          if (current.duration) {
+            $scrubControl.value = current.currentTime / current.duration;
+          } else {
+            $scrubControl.value = 0;
+          }
         }
       }
     }, 100);
