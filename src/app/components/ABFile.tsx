@@ -19,6 +19,7 @@ type ABFileProps = {
   onRemoveB: () => void;
   onPlayA: () => void;
   onPlayB: () => void;
+  onRemove: () => void;
   a: File | undefined;
   b: File | undefined;
 };
@@ -33,6 +34,7 @@ const ABFile = ({
   onRemoveB,
   onPlayA,
   onPlayB,
+  onRemove,
 }: ABFileProps) => {
   return (
     <div className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-black border-opacity-10 text-opacity-75 text-black">
@@ -40,18 +42,21 @@ const ABFile = ({
         <div className="flex items-center opacity-50 px-2 cursor-move">
           <Image src={dragIcon} alt="Drag" width="20" />
         </div>
-        <div className="flex-grow py-1">
+        <div className="flex-grow">
           <div className="flex">
             <input
               type="text"
               value={title}
               onChange={(ev) => onTitleChange(ev.target.value)}
-              className="block flex-grow text-xl py-1 px-2 mb-1 bg-white rounded-md shadow-inner border"
+              className="block flex-grow text-xl py-1 px-2 my-1 bg-white rounded-md shadow-inner border"
             />
             <div className="flex items-center px-1">
-              <div className="h-6 w-6 flex items-center justify-center text-white font-bold rounded-md bg-red-400 cursor-pointer">
+              <button
+                className="h-6 w-6 flex items-center justify-center text-white font-bold rounded-md bg-red-400 cursor-pointer"
+                onClick={onRemove}
+              >
                 &times;
-              </div>
+              </button>
             </div>
           </div>
           <div className="flex">
@@ -106,7 +111,7 @@ const UploadItem = ({ name }: { name: string }) => {
       <div className="group-first:bg-black/40 group-last:bg-black/50 uppercase flex justify-center items-center px-1 text-white w-14">
         {name}
       </div>
-      <label className="relative flex-grow flex items-center justify-center uppercase border-black/40 text-black/40 font-bold border-2 border-dashed rounded-md ml-1 ">
+      <label className="relative flex-grow flex items-center justify-center uppercase border-black/40 text-black/40 font-bold border-2 border-dashed rounded-md ml-1 hover:bg-black/5">
         Upload
         <input
           type="file"

@@ -1,4 +1,4 @@
-import ABFile from "./components/ABFile";
+"use client";
 import ABFilesContainer from "./components/ABFilesContainer";
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
               <span className="mr-2">Alt</span> <input type="color" />
             </div>
           </div>
-          <ABFilesContainer />
+          <ABFilesContainer playlistId={1} />
         </div>
       </div>
       <div className="rounded-md bg-[#EEF0F2] shadow-md p-4">
@@ -33,6 +33,7 @@ export default function Home() {
             type="text"
             className="w-full p-2 rounded-l-md border border-r-0 text-black/50"
             value={embedValue}
+            onChange={() => {}}
           />
           <button className="bg-[#EEC643] text-white font-bold rounded-r-md p-2">
             COPY
