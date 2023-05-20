@@ -37,7 +37,7 @@ const ABFile = ({
   onRemove,
 }: ABFileProps) => {
   return (
-    <div className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-black border-opacity-10 text-opacity-75 text-black">
+    <div className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-black border-opacity-10 text-opacity-75 text-black pb-2">
       <div className="flex">
         <div className="flex items-center opacity-50 px-2 cursor-move">
           <Image src={dragIcon} alt="Drag" width="20" />
@@ -52,7 +52,7 @@ const ABFile = ({
             />
             <div className="flex items-center px-1">
               <button
-                className="h-6 w-6 flex items-center justify-center text-white font-bold rounded-md bg-red-400 cursor-pointer"
+                className="h-6 w-6 flex items-center justify-center text-antiflash font-bold rounded-md bg-delete-red cursor-pointer"
                 onClick={onRemove}
               >
                 &times;
@@ -151,13 +151,13 @@ const BeforeAfterItem = ({
         </div>
       </div>
       <button
-        className="w-6 bg-green-500 text-white flex items-center justify-center cursor-pointer"
+        className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer"
         onClick={() => onPlay()}
       >
         <Image src={playIcon} alt="Play" width={10} />
       </button>
       <button
-        className="font-bold text-white w-6 group-first:rounded-tr-md group-last:rounded-br-md bg-red-400 cursor-pointer"
+        className="font-bold text-antiflash w-6 group-first:rounded-tr-md group-last:rounded-br-md bg-delete-red cursor-pointer"
         onClick={() => onRemove()}
       >
         &times;

@@ -2,6 +2,7 @@
 import { useState } from "react";
 
 import ABFile from "./ABFile";
+import Button from "./ui/Button";
 
 type User = {
   name: string;
@@ -124,12 +125,7 @@ const ABFilesContainer = ({ playlistId }: { playlistId: number }) => {
         ))}
       </div>
       <div className="text-right">
-        <button
-          className="bg-[#EEC643] text-white font-bold uppercase rounded-md p-2"
-          onClick={onAddABFile}
-        >
-          Add file
-        </button>
+        <Button onClick={onAddABFile}>Add file</Button>
       </div>
     </div>
   );

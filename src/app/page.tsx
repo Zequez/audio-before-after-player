@@ -5,6 +5,7 @@ import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import PlayerConfigurator from "./components/PlayerConfigurator";
+import Button from "./components/ui/Button";
 
 const Provider = ({
   children,
@@ -42,9 +43,7 @@ export default function Home() {
               value={embedValue}
               onChange={() => {}}
             />
-            <button className="bg-[#EEC643] text-white font-bold rounded-r-md p-2">
-              COPY
-            </button>
+            <Button className="rounded-l-none">COPY</Button>
           </div>
         </div>
       </main>

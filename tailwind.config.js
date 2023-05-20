@@ -12,6 +12,8 @@ module.exports = {
       antiflash: "#EEF0F2",
       zaffre: "#0D21A1",
       oxfordblue: "#011638",
+      "delete-red": "#ee4444",
+      "play-green": "#65ee44",
     },
     extend: {
       backgroundImage: {
