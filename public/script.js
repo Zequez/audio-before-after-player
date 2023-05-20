@@ -27,7 +27,6 @@
       $newAudioItemRoot = $newAudioItem.firstElementChild;
       $newAudioItem.querySelector(".audio-item-title").innerText = file.title;
       // $newAudioItem.querySelector(".audio-item-play");
-      console.log($newAudioItem);
       $newAudioItemRoot.addEventListener("click", () => {
         loadFile(i, true);
       });
