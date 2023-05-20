@@ -61,42 +61,45 @@ const ABFile = ({
           </div>
           <div className="flex">
             <button
-              className="flex items-center bg-white border border-r-0 rounded-l-md cursor-pointer"
+              className="flex items-center bg-night/50 px-0.5 rounded-l-md cursor-pointer"
               onClick={onSwitchAb}
             >
-              <Image
-                src={downIcon}
-                alt="Down"
-                width={8}
-                className="opacity-70"
-              />
-              <Image src={upIcon} alt="Up" width={8} className="opacity-70" />
+              <Image src={downIcon} alt="Down" width={8} className="" />
+              <Image src={upIcon} alt="Up" width={8} className="" />
             </button>
             <div className="flex-grow pr-1">
-              {a ? (
-                <BeforeAfterItem
-                  name="Before"
-                  file={a.name}
-                  size={a.size}
-                  length={a.length}
-                  onPlay={onPlayA}
-                  onRemove={onRemoveA}
-                />
-              ) : (
-                <UploadItem name="Before" />
-              )}
-              {b ? (
-                <BeforeAfterItem
-                  name="After"
-                  file={b.name}
-                  size={b.size}
-                  length={b.length}
-                  onPlay={onPlayB}
-                  onRemove={onRemoveB}
-                />
-              ) : (
-                <UploadItem name="After" />
-              )}
+              <div className="flex h-6 text-xs">
+                <div className="bg-night/40 uppercase flex justify-center items-center px-1 text-antiflash w-14">
+                  BEFORE
+                </div>
+                {a ? (
+                  <BeforeAfterItem
+                    file={a.name}
+                    size={a.size}
+                    length={a.length}
+                    onPlay={onPlayA}
+                    onRemove={onRemoveA}
+                  />
+                ) : (
+                  <UploadItem />
+                )}
+              </div>
+              <div className="flex h-6 text-xs mt-0.5">
+                <div className="bg-night/40 uppercase flex justify-center items-center px-1 text-antiflash w-14">
+                  AFTER
+                </div>
+                {b ? (
+                  <BeforeAfterItem
+                    file={b.name}
+                    size={b.size}
+                    length={b.length}
+                    onPlay={onPlayB}
+                    onRemove={onRemoveB}
+                  />
+                ) : (
+                  <UploadItem />
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -105,13 +108,10 @@ const ABFile = ({
   );
 };
 
-const UploadItem = ({ name }: { name: string }) => {
+const UploadItem = ({}: {}) => {
   return (
-    <div className="flex text-xs group">
-      <div className="group-first:bg-black/40 group-last:bg-black/50 uppercase flex justify-center items-center px-1 text-white w-14">
-        {name}
-      </div>
-      <label className="relative flex-grow flex items-center justify-center uppercase border-black/40 text-black/40 font-bold border-2 border-dashed rounded-md ml-1 hover:bg-black/5">
+    <div className="flex-grow text-xs">
+      <label className="relative flex-grow flex items-center justify-center uppercase border-night/40 text-night/40 font-bold border-2 border-dashed rounded-md ml-1 hover:bg-night/5">
         Upload
         <input
           type="file"
@@ -124,7 +124,6 @@ const UploadItem = ({ name }: { name: string }) => {
 };
 
 type BeforeAfterItemProps = {
-  name: string;
   file: string;
   size: number;
   length: number;
@@ -132,7 +131,6 @@ type BeforeAfterItemProps = {
   onRemove: () => void;
 };
 const BeforeAfterItem = ({
-  name,
   file,
   size,
   length,
@@ -140,24 +138,21 @@ const BeforeAfterItem = ({
   onRemove,
 }: BeforeAfterItemProps) => {
   return (
-    <div className="flex text-sm group">
-      <div className="group-first:bg-black/40 group-last:bg-black/50 uppercase text-xs flex justify-center items-center px-1 text-white w-14">
-        {name}
-      </div>
-      <div className="px-1 bg-white border border-l-0 border-r-0 flex-grow font-mono text-xs flex">
-        <div className="opacity-70 mr-2 flex-grow">{file}</div>
+    <div className="flex flex-grow items-stretch text-sm group ">
+      <div className="px-1 text-night/70 bg-night/10 rounded-r-md mr-0.5 flex-grow font-mono text-xs flex items-center">
+        <div className=" mr-2 flex-grow">{file}</div>
         <div>
           {sizeInKBToMb(size)}MB {timeInSecondsToMinutesSeconds(length)}
         </div>
       </div>
       <button
-        className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer"
+        className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer rounded-l-md"
         onClick={() => onPlay()}
       >
         <Image src={playIcon} alt="Play" width={10} />
       </button>
       <button
-        className="font-bold text-antiflash w-6 group-first:rounded-tr-md group-last:rounded-br-md bg-delete-red cursor-pointer"
+        className="font-bold text-antiflash w-6 rounded-r-md bg-delete-red cursor-pointer"
         onClick={() => onRemove()}
       >
         &times;
