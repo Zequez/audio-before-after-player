@@ -1,20 +1,14 @@
-import { useState, useEffect } from "react";
 import ABFilesContainer from "./ABFilesContainer";
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const PlayerConfigurator = () => {
-  const [data, setData] = useState();
-  const supabaseClient = useSupabaseClient();
-  const user = useUser();
-
-  useEffect(() => {
-    async function loadData() {
-      // const { data } = await supabaseClient.from("test").select("*");
-      // setData(data);
-    }
-    // Only run query once user is logged in.
-    if (user) loadData();
-  }, [user]);
+  // useEffect(() => {
+  //   async function loadData() {
+  //     const { data, error } = await supabaseClient.from("playlists").select();
+  //     console.log(user, data, error);
+  //   }
+  //   // Only run query once user is logged in.
+  //   if (user) loadData();
+  // }, [user]);
 
   return (
     <div className="rounded-md bg-[#EEF0F2] shadow-md p-4 flex-grow lg:mr-8 mb-8 lg:mb-0">

@@ -35,3 +35,7 @@ body {
 .text-shadow-px {
   text-shadow: 0.5px 1px 0px #14141480;
 }
+
+.text-shadow-white {
+  text-shadow: 0.5px 1px 0px #ffffff80;
+}

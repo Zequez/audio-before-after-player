@@ -37,9 +37,9 @@ const Authentication: React.FC<AuthProps> = () => {
           </div>
         </>
       ) : (
-        <div className="flex items-center justify-center">
-          {/* <h2 className="text-lg flex-grow">Sign up</h2> */}
-          <div className="w-80">
+        <div className="text-center">
+          <h2 className="text-2xl flex-grow">Your account</h2>
+          <div className="w-80 mx-auto">
             <Auth
               redirectTo="http://localhost:3000/"
               appearance={{
