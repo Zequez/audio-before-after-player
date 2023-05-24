@@ -1,23 +1,77 @@
 "client only";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { debounce } from "lodash";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import cx from "classnames";
 import Authentication from "./Authentication";
 import PlayerConfigurator from "./PlayerConfigurator";
 import Button from "./ui/Button";
+import { Playlist, BLANK_PLAYLIST } from "../../lib/database.types";
 
 export default function ConfigPage() {
-  const supabaseClient = useSupabaseClient();
+  const supabase = useSupabaseClient();
+  const [playlist, setPlaylist] = useState<Playlist>(BLANK_PLAYLIST);
   const user = useUser();
 
   useEffect(() => {
-    async function loadData() {
-      const { data, error } = await supabaseClient.from("playlists").select();
-      console.log(user, data, error);
+    if (user) {
+      (async function loadData() {
+        const { data, error } = await supabase
+          .from("playlists")
+          .select("*")
+          .eq("admin", user.id);
+        const playlists = data as Playlist[];
+
+        if (!error) {
+          if (!playlists.length) {
+            // We create a new playlist
+            const newPlaylist: Playlist = {
+              slug: "my-new-playlist",
+              mainColor: "#ff0000",
+              altColor: "#00ff00",
+              admin: user.id,
+            };
+            const { data: playlist, error } = await supabase
+              .from("playlists")
+              .insert(newPlaylist)
+              .single();
+            if (error) {
+              console.error("Error creating playlist", error);
+            } else {
+              setPlaylist(playlist);
+            }
+          } else {
+            // We use the current playlist
+            setPlaylist(playlists[0]);
+          }
+        } else {
+          console.error("Error fetching user playlists", error);
+        }
+      })();
     }
-    // Only run query once user is logged in.
-    if (user) loadData();
   }, [user]);
+
+  const handleChangePlaylist = async (playlist: Playlist) => {
+    setPlaylist(playlist);
+    debouncedUpdatePlaylist(playlist);
+  };
+
+  const updatePlaylist = async (playlist: Playlist) => {
+    const { data, error } = await supabase
+      .from("playlists")
+      .update(playlist)
+      .eq("id", playlist.id);
+    if (error) {
+      console.error("Error updating playlist", error);
+    } else {
+      console.log("Playlist updated", data);
+    }
+  };
+
+  const debouncedUpdatePlaylist = useCallback(
+    debounce(updatePlaylist, 1000),
+    []
+  );
 
   const embedValue = `<iframe src="https://app.soundtoggle.io/embed/abst3t3" sandbox="allow-scripts" width="500px" height="815px"/>`;
   return (
@@ -29,7 +83,10 @@ export default function ConfigPage() {
         ) : null}
         <div className={cx({ "blur-sm": !user })}>
           <div className="flex mb-8 flex-col lg:flex-row">
-            <PlayerConfigurator />
+            <PlayerConfigurator
+              playlist={playlist}
+              onChangePlaylist={handleChangePlaylist}
+            />
             <iframe
               className="rounded-md bg-[#EEF0F2] shadow-md w-full lg:w-[500px] h-[810px] flex-shrink-0"
               src="/matt.html"

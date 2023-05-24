@@ -8,6 +8,7 @@ specifiers:
   '@supabase/auth-ui-react': ^0.4.2
   '@supabase/auth-ui-shared': ^0.1.6
   '@supabase/supabase-js': ^2.22.0
+  '@types/lodash': ^4.14.194
   '@types/node': 20.1.4
   '@types/react': 18.2.6
   '@types/react-dom': 18.2.4
@@ -15,6 +16,7 @@ specifiers:
   classnames: ^2.3.2
   eslint: 8.40.0
   eslint-config-next: 13.4.2
+  lodash: ^4.17.21
   next: 13.4.2
   postcss: 8.4.23
   react: 18.2.0
@@ -30,6 +32,7 @@ dependencies:
   '@supabase/auth-ui-react': 0.4.2_r3gkvssv2zdfxym6k2bu33pzk4
   '@supabase/auth-ui-shared': 0.1.6_r3gkvssv2zdfxym6k2bu33pzk4
   '@supabase/supabase-js': 2.22.0
+  '@types/lodash': 4.14.194
   '@types/node': 20.1.4
   '@types/react': 18.2.6
   '@types/react-dom': 18.2.4
@@ -37,6 +40,7 @@ dependencies:
   classnames: 2.3.2
   eslint: 8.40.0
   eslint-config-next: 13.4.2_3qfatcekpgbllh6uk5ivyhkbxq
+  lodash: 4.17.21
   next: 13.4.2_biqbaboplfbrettd7655fr4n2y
   postcss: 8.4.23
   react: 18.2.0
@@ -412,6 +416,10 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: false
+
+  /@types/lodash/4.14.194:
+    resolution: {integrity: sha512-r22s9tAS7imvBt2lyHC9B8AGwWnXaYb1tY09oyLkXDs4vArpYJzw09nj8MLx5VfciBPGIb+ZwG0ssYnEPJxn/g==}
     dev: false
 
   /@types/node/20.1.4:
@@ -2000,6 +2008,10 @@ packages:
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+    dev: false
+
+  /lodash/4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: false
 
   /loose-envify/1.4.0:
