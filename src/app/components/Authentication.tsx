@@ -17,7 +17,7 @@ const Authentication: React.FC<AuthProps> = () => {
     <div className="rounded-md bg-[#EEF0F2] shadow-md mb-8 p-4">
       {user ? (
         <>
-          <div className="flex items-center">
+          <div className="flex flex-col sm:flex-row items-center text-center space-y-4 sm:space-y-0">
             <div className="w-20 h-20  flex items-center justify-center p-4 pl-6 bg-night/10 rounded-full shadow-sm">
               <Image
                 src={userCheckIcon}
@@ -39,7 +39,7 @@ const Authentication: React.FC<AuthProps> = () => {
       ) : (
         <div className="text-center">
           <h2 className="text-2xl flex-grow">Your account</h2>
-          <div className="w-80 mx-auto">
+          <div className="max-w-full w-80 mx-auto">
             <Auth
               redirectTo="http://localhost:3000/"
               appearance={{

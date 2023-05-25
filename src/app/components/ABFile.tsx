@@ -37,9 +37,9 @@ const ABFile = ({
   onRemove,
 }: ABFileProps) => {
   return (
-    <div className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-black border-opacity-10 text-opacity-75 text-black pb-2">
+    <div className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-night/30 text-opacity-75 text-black pb-2">
       <div className="flex">
-        <div className="flex items-center opacity-50 px-2 cursor-move">
+        <div className="flex items-center opacity-50 px-2 cursor-move flex-shrink-0">
           <Image src={dragIcon} alt="Drag" width="20" />
         </div>
         <div className="flex-grow">
@@ -48,7 +48,7 @@ const ABFile = ({
               type="text"
               value={title}
               onChange={(ev) => onTitleChange(ev.target.value)}
-              className="block flex-grow text-xl py-1 px-2 my-1 bg-white rounded-md shadow-inner border"
+              className="block flex-grow text-xl py-1 px-2 my-1 bg-white rounded-md shadow-inner border w-full"
             />
             <div className="flex items-center px-1">
               <button
@@ -61,7 +61,7 @@ const ABFile = ({
           </div>
           <div className="flex">
             <button
-              className="flex items-center bg-night/50 px-0.5 rounded-l-md cursor-pointer"
+              className="flex flex-shrink-0 items-center bg-night/50 px-0.5 rounded-l-md cursor-pointer"
               onClick={onSwitchAb}
             >
               <Image src={downIcon} alt="Down" width={8} className="" />
@@ -136,30 +136,31 @@ const BeforeAfterItem = ({
   length,
   onPlay,
   onRemove,
-}: BeforeAfterItemProps) => {
-  return (
-    <div className="flex flex-grow items-stretch text-sm group ">
-      <div className="px-1 text-night/70 bg-night/10 rounded-r-md mr-0.5 flex-grow font-mono text-xs flex items-center">
-        <div className=" mr-2 flex-grow">{file}</div>
-        <div>
+}: BeforeAfterItemProps) => (
+  <div className="flex flex-grow items-stretch text-sm group ">
+    <div className="relative text-night/70 bg-night/10 rounded-r-md mr-0.5 flex-grow flex items-center font-mono text-xs">
+      <div className="absolute inset-0 flex items-center px-1 overflow-hidden w-full whitespace-nowrap">
+        <div className="flex-grow text-ellipsis">{file}</div>
+        <div className="flex-grow">&nbsp;</div>
+        <div className="">
           {sizeInKBToMb(size)}MB {timeInSecondsToMinutesSeconds(length)}
         </div>
       </div>
-      <button
-        className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer rounded-l-md"
-        onClick={() => onPlay()}
-      >
-        <Image src={playIcon} alt="Play" width={10} />
-      </button>
-      <button
-        className="font-bold text-antiflash w-6 rounded-r-md bg-delete-red cursor-pointer"
-        onClick={() => onRemove()}
-      >
-        &times;
-      </button>
     </div>
-  );
-};
+    <button
+      className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer rounded-l-md"
+      onClick={() => onPlay()}
+    >
+      <Image src={playIcon} alt="Play" width={10} />
+    </button>
+    <button
+      className="font-bold text-antiflash w-6 rounded-r-md bg-delete-red cursor-pointer"
+      onClick={() => onRemove()}
+    >
+      &times;
+    </button>
+  </div>
+);
 
 const sizeInKBToMb = (size: number) => {
   return Math.round((size / 1024) * 100) / 100;
@@ -168,7 +169,9 @@ const sizeInKBToMb = (size: number) => {
 const timeInSecondsToMinutesSeconds = (time: number) => {
   const minutes = Math.floor(time / 60);
   const seconds = Math.round(time - minutes * 60);
-  return `${minutes}:${seconds}`;
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
 };
 
 export default ABFile;

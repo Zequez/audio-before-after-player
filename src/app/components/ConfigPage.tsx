@@ -1,5 +1,6 @@
 "client only";
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { debounce } from "lodash";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import cx from "classnames";
@@ -7,6 +8,7 @@ import Authentication from "./Authentication";
 import PlayerConfigurator from "./PlayerConfigurator";
 import Button from "./ui/Button";
 import { Playlist, BLANK_PLAYLIST } from "../../lib/database.types";
+import logo from "../logo.svg";
 
 export default function ConfigPage() {
   const supabase = useSupabaseClient();
@@ -75,7 +77,12 @@ export default function ConfigPage() {
 
   const embedValue = `<iframe src="https://app.soundtoggle.io/embed/abst3t3" sandbox="allow-scripts" width="500px" height="815px"/>`;
   return (
-    <main className="min-h-screen p-12 max-w-6xl mx-auto items-center">
+    <main className="min-h-screen p-4 sm:p-12 sm:max-w-6xl mx-auto items-center">
+      <h1 className="max-w-[300px] sm:max-w-lg mx-auto mb-4">
+        <a href="/">
+          <Image src={logo} alt="SoundToggle - Before and after audio player" />
+        </a>
+      </h1>
       <Authentication />
       <div className="relative">
         {!user ? (
