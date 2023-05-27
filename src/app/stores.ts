@@ -131,31 +131,6 @@ async function loadAbItems(playlistId: string) {
   }
 }
 
-// const playlistId = derived(playlist, ($playlist) => $playlist.id);
-// export const abItems = derived<typeof playlistId, AbItem[]>(
-//   playlistId,
-//   ($playlistId, set) => {
-//     console.log("PLAYLIST ID CHANGED", $playlistId);
-//     if ($playlistId) {
-//       (async () => {
-//         const { data, error } = await supabase
-//           .from("ab_items")
-//           .select("*")
-//           .eq("playlistId", $playlistId);
-//         const items = data as AbItem[];
-//         if (error) {
-//           console.error("Error fetching AB items", error);
-//         } else {
-//           console.log("ITEMS LOADED", items);
-//           set(items);
-//         }
-//       })();
-//     }
-//   },
-//   []
-// );
-// const $abItems = writable(abItems);
-
 export const addAbItem = async () => {
   const $playlist = get(playlist);
 
@@ -187,31 +162,53 @@ export const addAbItem = async () => {
   }
 };
 
-// Load ABItems
-// playlist.subscribe(async (playlist) => {
-//   if (playlist && playlist.id) {
-//     const { data, error } = await supabase
-//       .from("ab_items")
-//       .select("*")
-//       .eq("playlist", playlist.id);
-//     const items = data as AbItem[];
+const _abItems = {
+  getByLocalId: (localId: string) => {
+    return (get(abItems) || []).find((item) => item.localId === localId);
+  },
+  updateItem: (
+    localId: string,
+    updater: (item: WrappedAbItem) => WrappedAbItem
+  ): WrappedAbItem | undefined => {
+    const toUpdate = _abItems.getByLocalId(localId);
+    if (toUpdate) {
+      const newItem = updater(toUpdate);
+      if (newItem) {
+        abItems.update((items) =>
+          (items || []).map((i) => (i.localId === localId ? newItem : i))
+        );
+      }
+    }
+    return toUpdate;
+  },
+};
 
-//     if (error) {
-//       console.error("Error fetching AB items", error);
-//     } else {
-//       const updatableItems = items.map((item) => ({
-//         ...item,
-//         dirty: false,
-//         deleted: false,
-//       }));
-//       abItems.update(() => updatableItems);
-//     }
-//   }
-// });
+// const setItem = async (item: WrappedAbItem) => {
+//   abItems.update((items) => {
+//     if (items && items.length) {
+//       return items.map((i) => {
+//         if (i.localId = item.localId)
+//       })
+//     } else return items;
+//   })
+// }
 
-// abItems.subscribe((newItems) => {
-//   console.log("AB ITEMS STORE CHANGED", newItems);
-// });
+export const deleteAbItem = async (localId: string) => {
+  const toDelete = _abItems.updateItem(localId, (item) => ({
+    ...item,
+    deleted: true,
+  }));
+
+  if (toDelete && toDelete.abItem.id) {
+    const { error } = await supabase
+      .from("ab_items")
+      .delete()
+      .eq("id", toDelete.abItem.id);
+    if (error) {
+      console.error("Error deleting AB item", error);
+    }
+  }
+};
 
 // ██╗   ██╗████████╗██╗██╗     ███████╗
 // ██║   ██║╚══██╔══╝██║██║     ██╔════╝

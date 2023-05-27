@@ -44,7 +44,8 @@ const ABFilesContainer = () => {
   const onDragEnd = () => {};
   const onUploadEnds = () => {};
 
-  const onRemoveABFile = (i: number) => {
+  const onRemoveABFile = (localId: string) => {
+    store.deleteAbItem(localId);
     // abItems.update((prev) => {
     //   const newABFiles = [...prev];
     //   newABFiles[i].deleted = true;
@@ -81,7 +82,7 @@ const ABFilesContainer = () => {
         {$abItems
           ? $abItems.length
             ? $abItems
-                // .filter((item) => !item.deleted)
+                .filter((item) => !item.deleted)
                 .map(({ abItem: { title, a, b, id }, localId }, i) => (
                   <ABFile
                     key={localId}
@@ -103,7 +104,7 @@ const ABFilesContainer = () => {
                     onPlayB={() => {}}
                     onRemoveA={() => {}}
                     onRemoveB={() => {}}
-                    onRemove={onRemoveABFile.bind(null, i)}
+                    onRemove={onRemoveABFile.bind(null, localId)}
                   />
                 ))
             : "No items in the playlist yet"
