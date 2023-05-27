@@ -3,12 +3,21 @@ export type Playlist = {
   slug: string;
   mainColor: string;
   altColor: string;
-  admin: string;
+  ownerId: string;
 };
 
-export const BLANK_PLAYLIST = {
-  slug: "",
-  mainColor: "",
-  altColor: "",
-  admin: "",
+export type AbItem = {
+  id?: string;
+  a?: UserFile;
+  b?: UserFile;
+  title: string;
+  playlistId: string;
+  playlistOrder: number;
+};
+
+export type UserFile = {
+  bucketStorageUrl: string;
+  size: number;
+  length: number;
+  user?: string;
 };

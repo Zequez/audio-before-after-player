@@ -22,6 +22,7 @@ type ABFileProps = {
   onRemove: () => void;
   a: File | undefined;
   b: File | undefined;
+  id: string | undefined;
 };
 
 const ABFile = ({
@@ -29,6 +30,7 @@ const ABFile = ({
   onTitleChange,
   a,
   b,
+  id,
   onSwitchAb,
   onRemoveA,
   onRemoveB,
@@ -104,6 +106,7 @@ const ABFile = ({
           </div>
         </div>
       </div>
+      {!id ? "Inserting..." : null}
     </div>
   );
 };

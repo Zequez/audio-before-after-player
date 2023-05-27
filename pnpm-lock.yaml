@@ -22,6 +22,8 @@ specifiers:
   postcss: 8.4.23
   react: 18.2.0
   react-dom: 18.2.0
+  react-use-svelte-store: ^1.3.0
+  svelte: ^3.59.1
   tailwindcss: 3.3.2
   typescript: 5.0.4
 
@@ -47,6 +49,8 @@ dependencies:
   postcss: 8.4.23
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-use-svelte-store: 1.3.0_react@18.2.0+svelte@3.59.1
+  svelte: 3.59.1
   tailwindcss: 3.3.2
   typescript: 5.0.4
 
@@ -2502,6 +2506,16 @@ packages:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: false
 
+  /react-use-svelte-store/1.3.0_react@18.2.0+svelte@3.59.1:
+    resolution: {integrity: sha512-mxGHh9IOIB23V0MUbDH9FyEmV5EwM5zy9ZoYMcXnV3WfyPiYa5Mx/y8Gpa0kD1TDt7KC8kSKrTL3QGvLowfHew==}
+    peerDependencies:
+      react: '>=16.8'
+      svelte: '>=2'
+    dependencies:
+      react: 18.2.0
+      svelte: 3.59.1
+    dev: false
+
   /react/18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -2771,6 +2785,11 @@ packages:
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+    dev: false
+
+  /svelte/3.59.1:
+    resolution: {integrity: sha512-pKj8fEBmqf6mq3/NfrB9SLtcJcUvjYSWyePlfCqN9gujLB25RitWK8PvFzlwim6hD/We35KbPlRteuA6rnPGcQ==}
+    engines: {node: '>= 8'}
     dev: false
 
   /synckit/0.8.5:

@@ -1,28 +1,15 @@
 import ABFilesContainer from "./ABFilesContainer";
-import { Playlist } from "../../lib/database.types";
+import { playlist, updatePlaylist } from "../stores";
+import { useReadable } from "react-use-svelte-store";
 
-const PlayerConfigurator = ({
-  playlist,
-  onChangePlaylist,
-}: {
-  playlist: Playlist;
-  onChangePlaylist: (playlist: Playlist) => void;
-}) => {
-  // useEffect(() => {
-  //   async function loadData() {
-  //     const { data, error } = await supabaseClient.from("playlists").select();
-  //     console.log(user, data, error);
-  //   }
-  //   // Only run query once user is logged in.
-  //   if (user) loadData();
-  // }, [user]);
-
+const PlayerConfigurator = () => {
+  const $playlist = useReadable(playlist);
   const updateMainColor = (color: string) => {
-    onChangePlaylist({ ...playlist, mainColor: color });
+    updatePlaylist({ ...$playlist, mainColor: color });
   };
 
   const updateAltColor = (color: string) => {
-    onChangePlaylist({ ...playlist, altColor: color });
+    updatePlaylist({ ...$playlist, altColor: color });
   };
 
   return (
@@ -33,7 +20,7 @@ const PlayerConfigurator = ({
           <span className="mr-2">Main</span>{" "}
           <input
             type="color"
-            value={playlist.mainColor}
+            value={$playlist.mainColor}
             onChange={(e) => updateMainColor(e.target.value)}
           />
         </div>
@@ -41,12 +28,12 @@ const PlayerConfigurator = ({
           <span className="mr-2">Alt</span>{" "}
           <input
             type="color"
-            value={playlist.altColor}
+            value={$playlist.altColor}
             onChange={(e) => updateAltColor(e.target.value)}
           />
         </div>
       </div>
-      <ABFilesContainer playlistId={1} />
+      <ABFilesContainer />
     </div>
   );
 };
