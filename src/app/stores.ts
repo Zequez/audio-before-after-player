@@ -39,7 +39,7 @@ export const loadUserPlaylist = async (user: User) => {
     if (!currentPlaylist) {
       // We create a new playlist
       const newPlaylist: Playlist = {
-        slug: "my-new-playlist",
+        slug: generateRandomString(),
         mainColor: "#ff0000",
         altColor: "#00ff00",
         ownerId: user.id,
@@ -220,7 +220,7 @@ export const updateAbItemTitle = async (localId: string, title: string) => {
   }
 };
 
-const submitAbItem = async (toSubmit: WrappedAbItem) => {
+const submitAbItem = debounce(async (toSubmit: WrappedAbItem) => {
   if (toSubmit && toSubmit.abItem.id) {
     const { error } = await supabase
       .from("ab_items")
@@ -230,7 +230,7 @@ const submitAbItem = async (toSubmit: WrappedAbItem) => {
       console.error("Error updating AB item", error);
     }
   }
-};
+}, 1000);
 
 // ██╗   ██╗████████╗██╗██╗     ███████╗
 // ██║   ██║╚══██╔══╝██║██║     ██╔════╝
