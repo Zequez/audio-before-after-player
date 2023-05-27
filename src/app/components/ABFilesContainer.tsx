@@ -63,7 +63,8 @@ const ABFilesContainer = () => {
     // });
   };
 
-  const onTitleChange = (i: number, newTitle: string) => {
+  const onTitleChange = (localId: string, newTitle: string) => {
+    store.updateAbItemTitle(localId, newTitle);
     // abItems.update((prev) => {
     //   const newABFiles = [...prev];
     //   newABFiles[i].title = newTitle;
@@ -98,7 +99,7 @@ const ABFilesContainer = () => {
                         : b
                     }
                     id={id}
-                    onTitleChange={onTitleChange.bind(null, i)}
+                    onTitleChange={onTitleChange.bind(null, localId)}
                     onSwitchAb={onSwitchAb.bind(null, i)}
                     onPlayA={() => {}}
                     onPlayB={() => {}}

@@ -177,9 +177,9 @@ const _abItems = {
         abItems.update((items) =>
           (items || []).map((i) => (i.localId === localId ? newItem : i))
         );
+        return newItem;
       }
     }
-    return toUpdate;
   },
 };
 
@@ -206,6 +206,28 @@ export const deleteAbItem = async (localId: string) => {
       .eq("id", toDelete.abItem.id);
     if (error) {
       console.error("Error deleting AB item", error);
+    }
+  }
+};
+
+export const updateAbItemTitle = async (localId: string, title: string) => {
+  const updated = _abItems.updateItem(localId, (item) => ({
+    ...item,
+    abItem: { ...item.abItem, title },
+  }));
+  if (updated) {
+    submitAbItem(updated);
+  }
+};
+
+const submitAbItem = async (toSubmit: WrappedAbItem) => {
+  if (toSubmit && toSubmit.abItem.id) {
+    const { error } = await supabase
+      .from("ab_items")
+      .update(toSubmit.abItem)
+      .eq("id", toSubmit.abItem.id);
+    if (error) {
+      console.error("Error updating AB item", error);
     }
   }
 };
