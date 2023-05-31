@@ -14,6 +14,7 @@ module.exports = {
       oxfordblue: "#011638",
       "delete-red": "#ee4444",
       "play-green": "#65ee44",
+      white: "#FFFFFF",
     },
     extend: {
       backgroundImage: {

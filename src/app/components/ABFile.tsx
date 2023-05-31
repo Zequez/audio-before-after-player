@@ -1,5 +1,8 @@
 "use client";
 import Image from "next/image";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 import dragIcon from "../icons/drag.svg";
 import upIcon from "../icons/up.svg";
 import downIcon from "../icons/down.svg";
@@ -23,6 +26,7 @@ type ABFileProps = {
   a: File | undefined;
   b: File | undefined;
   id: string | undefined;
+  localId: string;
 };
 
 const ABFile = ({
@@ -37,11 +41,28 @@ const ABFile = ({
   onPlayA,
   onPlayB,
   onRemove,
+  localId,
 }: ABFileProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: localId });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   return (
-    <div className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-night/30 text-opacity-75 text-black pb-2">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-night/30 text-opacity-75 text-black pb-2"
+    >
       <div className="flex">
-        <div className="flex items-center opacity-50 px-2 cursor-move flex-shrink-0">
+        <div
+          {...listeners}
+          {...attributes}
+          className="flex items-center opacity-50 px-2 cursor-move flex-shrink-0"
+        >
           <Image src={dragIcon} alt="Drag" width="20" />
         </div>
         <div className="flex-grow">

@@ -2,6 +2,7 @@ import { createClient, User } from "@supabase/supabase-js";
 import { writable, readable, derived, get } from "svelte/store";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { arrayMove } from "@dnd-kit/sortable";
 
 import { AbItem, Playlist } from "@/lib/database.types";
 import { debounce } from "lodash";
@@ -91,7 +92,7 @@ export const debouncedSubmitPlaylist = debounce(submitPlaylist, 1000);
 // ██║  ██║██████╔╝    ██║   ██║   ███████╗██║ ╚═╝ ██║███████║
 // ╚═╝  ╚═╝╚═════╝     ╚═╝   ╚═╝   ╚══════╝╚═╝     ╚═╝╚══════╝
 
-type WrappedAbItem = {
+export type WrappedAbItem = {
   abItem: AbItem;
   dirty: boolean;
   deleted: boolean;
@@ -111,7 +112,7 @@ const wrapAbItem = (abItem: AbItem): WrappedAbItem => {
     abItem,
     dirty: false,
     deleted: false,
-    localId: abItem.id || generateRandomString(),
+    localId: (abItem.id && abItem.id.toString()) || generateRandomString(),
   };
 };
 
@@ -121,6 +122,7 @@ async function loadAbItems(playlistId: string) {
   const { data, error } = await supabase
     .from("ab_items")
     .select("*")
+    .order("playlistOrder", { ascending: true })
     .eq("playlistId", playlistId);
   const items = data as AbItem[];
   if (error) {
@@ -135,7 +137,12 @@ export const addAbItem = async () => {
   const $playlist = get(playlist);
 
   if ($playlist && $playlist.id) {
-    const itemToInsert: AbItem = { ...BLANK_AB_ITEM, playlistId: $playlist.id };
+    const nextPlaylistOrder = (get(abItems) || []).length;
+    const itemToInsert: AbItem = {
+      ...BLANK_AB_ITEM,
+      playlistId: $playlist.id,
+      playlistOrder: nextPlaylistOrder,
+    };
     const wrappedItem = wrapAbItem(itemToInsert);
     abItems.update((items) => [...(items || []), wrappedItem]);
 
@@ -166,6 +173,9 @@ const _abItems = {
   getByLocalId: (localId: string) => {
     return (get(abItems) || []).find((item) => item.localId === localId);
   },
+  getIndexByLocalId: (localId: string) => {
+    return (get(abItems) || []).findIndex((item) => item.localId === localId);
+  },
   updateItem: (
     localId: string,
     updater: (item: WrappedAbItem) => WrappedAbItem
@@ -182,16 +192,6 @@ const _abItems = {
     }
   },
 };
-
-// const setItem = async (item: WrappedAbItem) => {
-//   abItems.update((items) => {
-//     if (items && items.length) {
-//       return items.map((i) => {
-//         if (i.localId = item.localId)
-//       })
-//     } else return items;
-//   })
-// }
 
 export const deleteAbItem = async (localId: string) => {
   const toDelete = _abItems.updateItem(localId, (item) => ({
@@ -218,6 +218,67 @@ export const updateAbItemTitle = async (localId: string, title: string) => {
   if (updated) {
     submitAbItem(updated);
   }
+};
+
+export const moveAbItemTo = async (
+  activeLocalId: string,
+  overLocalId: string
+) => {
+  console.log("MOIVE!");
+  const currentItems = get(abItems);
+  if (currentItems && activeLocalId !== overLocalId) {
+    console.log(
+      "Switching active item",
+      get(abItems),
+      activeLocalId,
+      overLocalId
+    );
+    const activeIndex = _abItems.getIndexByLocalId(activeLocalId);
+    const overIndex = _abItems.getIndexByLocalId(overLocalId);
+    const newItems = arrayMove(currentItems, activeIndex, overIndex);
+    abItems.update(() => newItems);
+    updateAbItemsOrder();
+  }
+};
+
+const updateAbItemsOrder = () => {
+  abItems.update((items) => {
+    console.log("Updating AB ITEMS ORDER!");
+    if (items) {
+      const toSubmit: WrappedAbItem[] = [];
+      const newItems = items.map((item, i) => {
+        if (item.abItem.playlistOrder !== i) {
+          const updatedItem = {
+            ...item,
+            abItem: { ...item.abItem, playlistOrder: i },
+          };
+          if (item.abItem.id) toSubmit.push(updatedItem);
+          return updatedItem;
+        } else {
+          return item;
+        }
+      });
+      console.log("TO SUBMIT", toSubmit);
+      const updatePairs = toSubmit.map((item) => [
+        item.abItem.id,
+        item.abItem.playlistOrder,
+      ]);
+      (async () => {
+        const promises = updatePairs.map(([id, order]) => {
+          return supabase
+            .from("ab_items")
+            .update({ playlistOrder: order })
+            .eq("id", id)
+            .single();
+        });
+        const updateResults = await Promise.all(promises);
+        console.log(updateResults);
+      })();
+      return newItems;
+    } else {
+      return items;
+    }
+  });
 };
 
 const submitAbItem = debounce(async (toSubmit: WrappedAbItem) => {
