@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { supabase, user, UserFile } from "../stores";
+import { useReadable } from "react-use-svelte-store";
 
 import dragIcon from "../icons/drag.svg";
 import upIcon from "../icons/up.svg";
@@ -17,16 +19,15 @@ type File = {
 type ABFileProps = {
   title: string;
   onTitleChange: (title: string) => void;
-  onSwitchAb: () => void;
   onRemoveA: () => void;
   onRemoveB: () => void;
   onPlayA: () => void;
   onPlayB: () => void;
   onRemove: () => void;
-  a: File | undefined;
-  b: File | undefined;
-  id: string | undefined;
-  localId: string;
+  a: UserFile | null;
+  b: UserFile | null;
+  id: string;
+  // localId: string;
 };
 
 const ABFile = ({
@@ -35,16 +36,14 @@ const ABFile = ({
   a,
   b,
   id,
-  onSwitchAb,
   onRemoveA,
   onRemoveB,
   onPlayA,
   onPlayB,
   onRemove,
-  localId,
 }: ABFileProps) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: localId });
+    useSortable({ id: id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -55,7 +54,7 @@ const ABFile = ({
     <div
       ref={setNodeRef}
       style={style}
-      className="-ml-4 -mr-4 bg-white bg-opacity-50 border-t last:border-b border-night/30 text-opacity-75 text-black pb-2"
+      className="-ml-4 -mr-4 bg-white/50 border-t last:border-b border-night/30 text-opacity-75 text-black py-2"
     >
       <div className="flex">
         <div
@@ -66,12 +65,12 @@ const ABFile = ({
           <Image src={dragIcon} alt="Drag" width="20" />
         </div>
         <div className="flex-grow">
-          <div className="flex">
+          <div className="flex mb-2">
             <input
               type="text"
               value={title}
               onChange={(ev) => onTitleChange(ev.target.value)}
-              className="block flex-grow text-xl py-1 px-2 my-1 bg-white rounded-md shadow-inner border w-full"
+              className="block flex-grow text-xl py-1 px-2 bg-white rounded-md shadow-inner border border-night/50 w-full outline-saffron"
             />
             <div className="flex items-center px-1">
               <button
@@ -83,23 +82,16 @@ const ABFile = ({
             </div>
           </div>
           <div className="flex">
-            <button
-              className="flex flex-shrink-0 items-center bg-night/50 px-0.5 rounded-l-md cursor-pointer"
-              onClick={onSwitchAb}
-            >
-              <Image src={downIcon} alt="Down" width={8} className="" />
-              <Image src={upIcon} alt="Up" width={8} className="" />
-            </button>
             <div className="flex-grow pr-1">
               <div className="flex h-6 text-xs">
-                <div className="bg-night/40 uppercase flex justify-center items-center px-1 text-antiflash w-14">
+                <div className="text-night/60 font-bold uppercase flex justify-end items-center px-1 w-14">
                   BEFORE
                 </div>
                 {a ? (
                   <BeforeAfterItem
-                    file={a.name}
+                    file={a.path}
                     size={a.size}
-                    length={a.length}
+                    // length={a.length}
                     onPlay={onPlayA}
                     onRemove={onRemoveA}
                   />
@@ -108,14 +100,14 @@ const ABFile = ({
                 )}
               </div>
               <div className="flex h-6 text-xs mt-0.5">
-                <div className="bg-night/40 uppercase flex justify-center items-center px-1 text-antiflash w-14">
+                <div className="  text-night/60 font-bold uppercase  flex justify-end items-center px-1  w-14">
                   AFTER
                 </div>
                 {b ? (
                   <BeforeAfterItem
-                    file={b.name}
+                    file={b.path}
                     size={b.size}
-                    length={b.length}
+                    // length={b.length}
                     onPlay={onPlayB}
                     onRemove={onRemoveB}
                   />
@@ -127,19 +119,39 @@ const ABFile = ({
           </div>
         </div>
       </div>
-      {!id ? "Inserting..." : null}
     </div>
   );
 };
 
 const UploadItem = ({}: {}) => {
+  const $user = useReadable(user);
+
+  async function handleUpload(ev: any) {
+    console.log(ev, ev.target, $user);
+    if (ev && ev.target && $user) {
+      const soundFile = ev.target.files[0];
+      console.log("UPLOADING FILE!", soundFile);
+      console.log(soundFile);
+      soundFile.name;
+      const { data, error } = await supabase.storage
+        .from("soundtoggle")
+        .upload(`${$user.id}/${soundFile.name}`, soundFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      console.log(data, error);
+    }
+  }
+
   return (
     <div className="flex-grow text-xs">
-      <label className="relative flex-grow flex items-center justify-center uppercase border-night/40 text-night/40 font-bold border-2 border-dashed rounded-md ml-1 hover:bg-night/5">
+      <label className="relative flex-grow flex items-center justify-center uppercase border-night/60 text-night/40 font-semibold border border-dashed rounded-md ml-1 hover:bg-night/5">
         Upload
         <input
           type="file"
           accept="audio/*"
+          onInput={handleUpload}
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
       </label>
@@ -150,14 +162,14 @@ const UploadItem = ({}: {}) => {
 type BeforeAfterItemProps = {
   file: string;
   size: number;
-  length: number;
+  // length: number;
   onPlay: () => void;
   onRemove: () => void;
 };
 const BeforeAfterItem = ({
   file,
   size,
-  length,
+  // length,
   onPlay,
   onRemove,
 }: BeforeAfterItemProps) => (
@@ -167,7 +179,8 @@ const BeforeAfterItem = ({
         <div className="flex-grow text-ellipsis">{file}</div>
         <div className="flex-grow">&nbsp;</div>
         <div className="">
-          {sizeInKBToMb(size)}MB {timeInSecondsToMinutesSeconds(length)}
+          {/* {sizeInKBToMb(size)}MB {timeInSecondsToMinutesSeconds(length)} */}
+          {sizeInKBToMb(size)}MB
         </div>
       </div>
     </div>

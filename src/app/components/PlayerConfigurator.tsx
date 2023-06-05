@@ -1,15 +1,32 @@
+import { useEffect } from "react";
 import ABFilesContainer from "./ABFilesContainer";
-import { playlist, updatePlaylist } from "../stores";
+import {
+  // playlist,
+  // updatePlaylist,
+  userDoc,
+  // buildPlaylist2,
+  Playlist,
+  AbItem,
+} from "../stores";
 import { useReadable } from "react-use-svelte-store";
 
-const PlayerConfigurator = () => {
-  const $playlist = useReadable(playlist);
+const PlayerConfigurator = ({
+  playlist,
+  onChange,
+}: {
+  playlist: Playlist;
+  onChange: (playlist: Playlist) => void;
+}) => {
   const updateMainColor = (color: string) => {
-    updatePlaylist({ ...$playlist, mainColor: color });
+    onChange({ ...playlist, mainColor: color });
   };
 
   const updateAltColor = (color: string) => {
-    updatePlaylist({ ...$playlist, altColor: color });
+    onChange({ ...playlist, altColor: color });
+  };
+
+  const updateItems = (items: AbItem[]) => {
+    onChange({ ...playlist, items });
   };
 
   return (
@@ -20,7 +37,7 @@ const PlayerConfigurator = () => {
           <span className="mr-2">Main</span>{" "}
           <input
             type="color"
-            value={$playlist.mainColor}
+            value={playlist.mainColor}
             onChange={(e) => updateMainColor(e.target.value)}
           />
         </div>
@@ -28,12 +45,12 @@ const PlayerConfigurator = () => {
           <span className="mr-2">Alt</span>{" "}
           <input
             type="color"
-            value={$playlist.altColor}
+            value={playlist.altColor}
             onChange={(e) => updateAltColor(e.target.value)}
           />
         </div>
       </div>
-      <ABFilesContainer />
+      <ABFilesContainer items={playlist.items} onChange={updateItems} />
     </div>
   );
 };
