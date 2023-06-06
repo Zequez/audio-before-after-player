@@ -1,5 +1,5 @@
 "use client";
-import { AbItem, initialAbItem } from "../stores";
+import { AbItem, initialAbItem, UserFile } from "../stores";
 import { arrayMove } from "@dnd-kit/sortable";
 import {
   DndContext,
@@ -31,7 +31,6 @@ const ABFilesContainer = ({
   const onUploadEnds = () => {};
 
   const onRemoveABFile = (i: number) => () => {
-    console.log("Remove");
     const newItems = items.concat([]);
     newItems.splice(i, 1);
     onChange(newItems);
@@ -47,6 +46,17 @@ const ABFilesContainer = ({
   const onAddABFile = () => {
     onChange([...items, initialAbItem()]);
   };
+
+  const onChangeFile =
+    (i: number, aOrB: "beforeFile" | "afterFile") =>
+    (file: UserFile | null) => {
+      console.log("Changing file!", i, aOrB, file);
+      const newItem = { ...items[i], [aOrB]: file };
+      const newItems = [...items];
+      newItems.splice(i, 1, newItem);
+      console.log(newItems);
+      onChange(newItems);
+    };
 
   const handleDragEnd = (event: DragEndEvent) => {
     console.log("Drag ended", event);
@@ -82,10 +92,8 @@ const ABFilesContainer = ({
                   a={item.beforeFile}
                   b={item.afterFile}
                   onTitleChange={onTitleChange(i)}
-                  onPlayA={() => {}}
-                  onPlayB={() => {}}
-                  onRemoveA={() => {}}
-                  onRemoveB={() => {}}
+                  onChangeA={onChangeFile(i, "beforeFile")}
+                  onChangeB={onChangeFile(i, "afterFile")}
                   onRemove={onRemoveABFile(i)}
                 />
               ))}
@@ -100,11 +108,6 @@ const ABFilesContainer = ({
       </div>
     </div>
   );
-};
-
-const extractNameFromUrl = (url: string) => {
-  const parts = url.split("/");
-  return parts[parts.length - 1];
 };
 
 export default ABFilesContainer;

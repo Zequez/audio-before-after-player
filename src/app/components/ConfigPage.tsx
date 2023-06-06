@@ -11,6 +11,7 @@ import logo from "../logo.svg";
 import {
   user as storeUser,
   loadUserDoc,
+  loadUserFiles,
   Playlist,
   Doc,
   userDoc,
@@ -30,6 +31,7 @@ export default function ConfigPage() {
     if (user) {
       storeUser.set(user);
       loadUserDoc(user);
+      loadUserFiles(user);
     }
   }, [user]);
 

@@ -2,17 +2,18 @@
 import Image from "next/image";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { supabase, user, UserFile } from "../stores";
+import { supabase, user, UserFile, uploadUserFile } from "../stores";
 import { useReadable } from "react-use-svelte-store";
 
 import dragIcon from "../icons/drag.svg";
 import playIcon from "../icons/play.svg";
+import { useState } from "react";
 
 type ABFileProps = {
   title: string;
   onTitleChange: (title: string) => void;
-  onChangeA: () => void;
-  onChangeB: () => void;
+  onChangeA: (userFile: UserFile | null) => void;
+  onChangeB: (userFile: UserFile | null) => void;
   onRemove: () => void;
   a: UserFile | null;
   b: UserFile | null;
@@ -70,7 +71,7 @@ const ABFile = ({
             </div>
           </div>
           <div className="flex">
-            <div className="flex-grow pr-1">
+            <div className="flex-grow pr-1 space-y-1">
               <FileItem title="BEFORE" file={a} onChange={onChangeA} />
               <FileItem title="AFTER" file={b} onChange={onChangeB} />
             </div>
@@ -108,29 +109,32 @@ const UploadItem = ({
   onUploaded: (file: UserFile) => void;
 }) => {
   const $user = useReadable(user);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(false);
 
   async function handleUpload(ev: any) {
-    console.log(ev, ev.target, $user);
     if (ev && ev.target && $user) {
+      setIsUploading(true);
       const soundFile = ev.target.files[0];
-      console.log("UPLOADING FILE!", soundFile);
-      console.log(soundFile);
-      soundFile.name;
-      const { data, error } = await supabase.storage
-        .from("soundtoggle")
-        .upload(`${$user.id}/${soundFile.name}`, soundFile, {
-          cacheControl: "3600",
-          upsert: false,
-        });
-
-      console.log(data, error);
+      const userFile = await uploadUserFile(soundFile);
+      setIsUploading(false);
+      if (userFile) {
+        setUploadError(false);
+        onUploaded(userFile);
+      } else {
+        setUploadError(true);
+      }
     }
   }
 
   return (
     <div className="flex-grow text-xs">
       <label className="relative flex-grow flex items-center justify-center uppercase border-night/60 text-night/40 font-semibold border border-dashed rounded-md ml-1 hover:bg-night/5">
-        Upload
+        {uploadError
+          ? "Error uploading try again maybe"
+          : isUploading
+          ? "Uploading..."
+          : "Upload"}
         <input
           type="file"
           accept="audio/*"
@@ -156,14 +160,15 @@ const BeforeAfterItem = ({
   // onPlay,
   onRemove,
 }: BeforeAfterItemProps) => (
-  <div className="flex flex-grow items-stretch text-sm group ">
-    <div className="relative text-night/70 bg-night/10 rounded-r-md mr-0.5 flex-grow flex items-center font-mono text-xs">
-      <div className="absolute inset-0 flex items-center px-1 overflow-hidden w-full whitespace-nowrap">
-        <div className="flex-grow text-ellipsis">{file}</div>
-        <div className="flex-grow">&nbsp;</div>
+  <div className="flex flex-grow items-stretch text-sm group ml-1 ">
+    <div className="relative rounded-r-md mr-0.5 flex-grow flex items-center font-mono text-xs">
+      <div className="absolute inset-0 flex items-center px-1 overflow-hidden w-full whitespace-nowrap border rounded-md border-night/30 text-night/40">
+        <div className="flex-grow text-ellipsis text-[0.75rem] overflow-hidden mr-1">
+          {extractNameFromUrl(file)}
+        </div>
         <div className="">
           {/* {sizeInKBToMb(size)}MB {timeInSecondsToMinutesSeconds(length)} */}
-          {sizeInKBToMb(size)}MB
+          {sizeInBToMb(size)}MB
         </div>
       </div>
     </div>
@@ -182,8 +187,8 @@ const BeforeAfterItem = ({
   </div>
 );
 
-const sizeInKBToMb = (size: number) => {
-  return Math.round((size / 1024) * 100) / 100;
+const sizeInBToMb = (size: number) => {
+  return Math.round((size / 1024 / 1024) * 100) / 100;
 };
 
 const timeInSecondsToMinutesSeconds = (time: number) => {
@@ -192,6 +197,11 @@ const timeInSecondsToMinutesSeconds = (time: number) => {
   return `${minutes.toString().padStart(2, "0")}:${seconds
     .toString()
     .padStart(2, "0")}`;
+};
+
+const extractNameFromUrl = (url: string) => {
+  const parts = url.split("/");
+  return parts[parts.length - 1];
 };
 
 export default ABFile;

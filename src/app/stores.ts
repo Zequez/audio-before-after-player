@@ -1,5 +1,5 @@
 import { User } from "@supabase/supabase-js";
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { debounce } from "lodash";
 
@@ -57,8 +57,8 @@ const initialDoc = (): Doc => ({
 
 export const buildPlaylist = () => ({
   slug: generateRandomString(),
-  mainColor: "hsl(0, 50%, 90%)",
-  altColor: "hsl(180, 50%, 90%)",
+  mainColor: "#000000",
+  altColor: "#555555",
   items: [],
 });
 
@@ -124,6 +124,88 @@ export async function saveDoc(userDocToSave: ContextUserDoc) {
 }
 
 export const debouncedSaveDoc = debounce(saveDoc, 1000);
+
+// ██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗████████╗███████╗
+// ██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝██╔════╝
+// ██████╔╝██║   ██║██║     █████╔╝ █████╗     ██║   ███████╗
+// ██╔══██╗██║   ██║██║     ██╔═██╗ ██╔══╝     ██║   ╚════██║
+// ██████╔╝╚██████╔╝╚██████╗██║  ██╗███████╗   ██║   ███████║
+// ╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝
+
+const BUCKET = "soundtoggle";
+
+type BucketFile = {
+  name: string;
+  metadata: {
+    size: number;
+  };
+};
+
+export const bucketFiles = writable<BucketFile[]>([]);
+
+export async function loadUserFiles(user: User) {
+  const { data, error } = await supabase.storage.from(BUCKET).list(user.id, {
+    limit: 200,
+    offset: 0,
+    sortBy: { column: "name", order: "asc" },
+  });
+
+  if (!error) {
+    bucketFiles.set(data as any as BucketFile[]);
+  } else {
+    console.error("Error fetching user files", error);
+  }
+}
+
+export async function uploadUserFile(file: File): Promise<UserFile | null> {
+  const $user = get(user);
+  if ($user) {
+    const existingFile = findExistingFile(file.name);
+    if (!existingFile) {
+      const filePath = `${$user.id}/${file.name}`;
+      const { data, error } = await supabase.storage
+        .from(BUCKET)
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) {
+        console.error("Error uploading file");
+        return null;
+      } else {
+        const newBucketFile: BucketFile = {
+          name: data.path,
+          metadata: { size: file.size },
+        };
+        console.log("Uploaded file", newBucketFile);
+        bucketFiles.update((bucketFiles) => [...bucketFiles, newBucketFile]);
+        return bucketToUserFile(newBucketFile);
+      }
+    } else {
+      console.log("File already exists, returning loaded one", existingFile);
+      return bucketToUserFile(existingFile);
+    }
+  }
+  throw new Error("User not logged in");
+}
+
+function bucketToUserFile(bucketFile: BucketFile): UserFile {
+  const $user = get(user);
+  if ($user) {
+    const filePath = `${$user.id}/${bucketFile.name}`;
+    const { data } = supabase.storage.from(BUCKET).getPublicUrl(filePath);
+    return {
+      path: data.publicUrl,
+      size: bucketFile.metadata.size,
+    };
+  }
+  throw new Error("User not logged in");
+}
+
+function findExistingFile(fileName: string) {
+  return get(bucketFiles).find((file) => file.name === fileName);
+}
 
 // ██╗   ██╗████████╗██╗██╗     ███████╗
 // ██║   ██║╚══██╔══╝██║██║     ██╔════╝
