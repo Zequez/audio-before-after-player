@@ -63,7 +63,7 @@ const ABFile = ({
             />
             <div className="flex items-center px-1">
               <button
-                className="h-6 w-6 flex items-center justify-center text-antiflash font-bold rounded-md bg-delete-red cursor-pointer"
+                className="h-6 w-6 flex items-center justify-center text-antiflash font-bold rounded-md bg-delete-red/90 hover:bg-delete-red cursor-pointer"
                 onClick={onRemove}
               >
                 &times;
@@ -172,17 +172,17 @@ const BeforeAfterItem = ({
         </div>
       </div>
     </div>
-    <button
+    {/* <button
       className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer rounded-l-md"
       onClick={() => console.log("TRIGGER PLAY")}
     >
       <Image src={playIcon} alt="Play" width={10} />
-    </button>
+    </button> */}
     <button
-      className="font-bold text-antiflash w-6 rounded-r-md bg-delete-red cursor-pointer"
+      className="font-bold w-6 ml-1 rounded-md border-solid border-2 bg-delete-red/20 border-delete-red/60 hover:bg-delete-red/30 text-delete-red cursor-pointer"
       onClick={() => onRemove()}
     >
-      &times;
+      &minus;
     </button>
   </div>
 );
