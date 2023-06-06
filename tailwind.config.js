@@ -10,6 +10,7 @@ module.exports = {
       saffron: "#EEC643",
       night: "#141414",
       antiflash: "#EEF0F2",
+      "antiflash-light": "#f7f8f9",
       zaffre: "#0D21A1",
       oxfordblue: "#011638",
       "delete-red": "#ee4444",

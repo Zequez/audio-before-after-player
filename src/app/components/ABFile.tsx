@@ -6,8 +6,6 @@ import { supabase, user, UserFile } from "../stores";
 import { useReadable } from "react-use-svelte-store";
 
 import dragIcon from "../icons/drag.svg";
-import upIcon from "../icons/up.svg";
-import downIcon from "../icons/down.svg";
 import playIcon from "../icons/play.svg";
 
 type File = {
@@ -42,19 +40,20 @@ const ABFile = ({
   onPlayB,
   onRemove,
 }: ABFileProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, transition, active } =
     useSortable({ id: id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    zIndex: active?.id === id ? 1 : 0,
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="-ml-4 -mr-4 bg-white/50 border-t last:border-b border-night/30 text-opacity-75 text-black py-2"
+      className="relative -ml-4 -mr-4 bg-antiflash-light first:border-t border-b border-night/30 text-opacity-75 text-black py-2"
     >
       <div className="flex">
         <div

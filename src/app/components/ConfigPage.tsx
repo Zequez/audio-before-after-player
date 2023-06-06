@@ -1,5 +1,6 @@
 "client only";
 import Image from "next/image";
+import { useRef } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useReadable } from "react-use-svelte-store";
 import cx from "classnames";
@@ -19,6 +20,7 @@ import { useEffect } from "react";
 // import SortableList from "./SortableList";
 
 export default function ConfigPage() {
+  const embedInputBoxEl = useRef<HTMLInputElement>(null);
   const user = useUser();
   const $doc = useReadable(userDoc);
   const playlistIndex = 0;
@@ -74,15 +76,49 @@ export default function ConfigPage() {
             <div className="flex">
               <input
                 type="text"
-                className="w-full p-2 rounded-l-md border border-r-0 text-black/50"
+                ref={embedInputBoxEl}
+                disabled
+                className="w-full p-2 rounded-l-md border border-r-0 border-night/50 shadow-inner text-black/50 bg-white"
                 value={embedValue}
                 onChange={() => {}}
               />
-              <Button className="rounded-l-none">COPY</Button>
+              <Button
+                className="rounded-l-none"
+                onClick={() =>
+                  embedInputBoxEl.current &&
+                  selectAndCopy(embedInputBoxEl.current)
+                }
+              >
+                COPY
+              </Button>
             </div>
           </div>
         </div>
       </div>
     </main>
   );
+}
+
+function selectAndCopy(element: HTMLInputElement, copyEnabled = true) {
+  window.getSelection()?.removeAllRanges();
+
+  var range = document.createRange();
+  range.selectNode(element);
+  window.getSelection()?.addRange(range);
+
+  const copyContent = async () => {
+    try {
+      await navigator.clipboard.writeText(element.value);
+      console.log("Content copied to clipboard");
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
+  copyContent();
+
+  // if (copyEnabled) {
+  //   navigator.clipboard.writeText(element.innerText);
+  //   // window.getSelection().removeAllRanges();
+  // }
 }

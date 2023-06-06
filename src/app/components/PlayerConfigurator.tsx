@@ -33,26 +33,32 @@ const PlayerConfigurator = ({
     <div className="rounded-md bg-[#EEF0F2] shadow-md p-4 flex-grow lg:mr-8 mb-8 lg:mb-0">
       <h2 className="text-2xl mb-4 opacity-80">Style</h2>
       <div className="mb-4 flex text-night/80">
-        <div className="bg-white rounded-md flex items-center justify-center px-2 border border-night/50 mr-2">
-          <span className="mr-2">Main</span>{" "}
-          <input
-            type="color"
-            value={playlist.mainColor}
-            onChange={(e) => updateMainColor(e.target.value)}
-          />
-        </div>
-        <div className="bg-white rounded-md flex items-center justify-center px-2  border border-night/50 mr-2">
-          <span className="mr-2">Alt</span>{" "}
-          <input
-            type="color"
-            value={playlist.altColor}
-            onChange={(e) => updateAltColor(e.target.value)}
-          />
-        </div>
+        {ColorInput("Main", playlist.mainColor, updateMainColor)}
+        {ColorInput("Accent", playlist.altColor, updateAltColor)}
       </div>
       <ABFilesContainer items={playlist.items} onChange={updateItems} />
     </div>
   );
 };
+
+const ColorInput = (
+  name: string,
+  value: string,
+  onChange: (value: string) => void
+) => (
+  <label className="bg-white rounded-md flex items-center justify-center p-2  border border-night/50 mr-2 cursor-pointer relative">
+    <div className="mr-2">{name} color</div>{" "}
+    <div
+      style={{ backgroundColor: value }}
+      className="rounded-md border border-night/40 w-20 h-6 shadow-inset"
+    ></div>
+    <input
+      className="absolute inset-0 opacity-0"
+      type="color"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  </label>
+);
 
 export default PlayerConfigurator;
