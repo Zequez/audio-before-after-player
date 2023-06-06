@@ -8,24 +8,15 @@ import { useReadable } from "react-use-svelte-store";
 import dragIcon from "../icons/drag.svg";
 import playIcon from "../icons/play.svg";
 
-type File = {
-  name: string;
-  size: number;
-  length: number;
-};
-
 type ABFileProps = {
   title: string;
   onTitleChange: (title: string) => void;
-  onRemoveA: () => void;
-  onRemoveB: () => void;
-  onPlayA: () => void;
-  onPlayB: () => void;
+  onChangeA: () => void;
+  onChangeB: () => void;
   onRemove: () => void;
   a: UserFile | null;
   b: UserFile | null;
   id: string;
-  // localId: string;
 };
 
 const ABFile = ({
@@ -34,10 +25,8 @@ const ABFile = ({
   a,
   b,
   id,
-  onRemoveA,
-  onRemoveB,
-  onPlayA,
-  onPlayB,
+  onChangeA,
+  onChangeB,
   onRemove,
 }: ABFileProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, active } =
@@ -82,38 +71,8 @@ const ABFile = ({
           </div>
           <div className="flex">
             <div className="flex-grow pr-1">
-              <div className="flex h-6 text-xs">
-                <div className="text-night/60 font-bold uppercase flex justify-end items-center px-1 w-14">
-                  BEFORE
-                </div>
-                {a ? (
-                  <BeforeAfterItem
-                    file={a.path}
-                    size={a.size}
-                    // length={a.length}
-                    onPlay={onPlayA}
-                    onRemove={onRemoveA}
-                  />
-                ) : (
-                  <UploadItem />
-                )}
-              </div>
-              <div className="flex h-6 text-xs mt-0.5">
-                <div className="  text-night/60 font-bold uppercase  flex justify-end items-center px-1  w-14">
-                  AFTER
-                </div>
-                {b ? (
-                  <BeforeAfterItem
-                    file={b.path}
-                    size={b.size}
-                    // length={b.length}
-                    onPlay={onPlayB}
-                    onRemove={onRemoveB}
-                  />
-                ) : (
-                  <UploadItem />
-                )}
-              </div>
+              <FileItem title="BEFORE" file={a} onChange={onChangeA} />
+              <FileItem title="AFTER" file={b} onChange={onChangeB} />
             </div>
           </div>
         </div>
@@ -122,7 +81,32 @@ const ABFile = ({
   );
 };
 
-const UploadItem = ({}: {}) => {
+type FileItemProps = {
+  title: string;
+  file: UserFile | null;
+  onChange: (file: UserFile | null) => void;
+};
+const FileItem = ({ title, file, onChange }: FileItemProps) => (
+  <div className="flex h-6 text-xs">
+    <div className="text-night/60 font-bold uppercase flex justify-end items-center px-1 w-14">
+      {title}
+    </div>
+    {file ? (
+      <BeforeAfterItem
+        file={file.path}
+        size={file.size}
+        onRemove={() => onChange(null)}
+      />
+    ) : (
+      <UploadItem onUploaded={(file: UserFile) => onChange(file)} />
+    )}
+  </div>
+);
+const UploadItem = ({
+  onUploaded,
+}: {
+  onUploaded: (file: UserFile) => void;
+}) => {
   const $user = useReadable(user);
 
   async function handleUpload(ev: any) {
@@ -162,14 +146,14 @@ type BeforeAfterItemProps = {
   file: string;
   size: number;
   // length: number;
-  onPlay: () => void;
+  // onPlay: () => void;
   onRemove: () => void;
 };
 const BeforeAfterItem = ({
   file,
   size,
   // length,
-  onPlay,
+  // onPlay,
   onRemove,
 }: BeforeAfterItemProps) => (
   <div className="flex flex-grow items-stretch text-sm group ">
@@ -185,7 +169,7 @@ const BeforeAfterItem = ({
     </div>
     <button
       className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer rounded-l-md"
-      onClick={() => onPlay()}
+      onClick={() => console.log("TRIGGER PLAY")}
     >
       <Image src={playIcon} alt="Play" width={10} />
     </button>
