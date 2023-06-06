@@ -51,7 +51,9 @@ export default function ConfigPage() {
     updateDoc({ playlists: playlistsCopy });
   }
 
-  const embedValue = `<iframe src="https://app.soundtoggle.io/embed/abst3t3" sandbox="allow-scripts" width="500px" height="815px"/>`;
+  const embedValue = `<iframe src="https://app.soundtoggle.io/embed/${
+    user?.id || ""
+  }/${playlistIndex}" sandbox="allow-scripts" width="500px" height="815px"/>`;
   return (
     <main className="min-h-screen p-4 sm:p-12 sm:max-w-6xl mx-auto items-center">
       <h1 className="max-w-[300px] sm:max-w-lg mx-auto mb-4">
