@@ -5,24 +5,10 @@
     if (files.length) {
       renderAudioFiles(files);
     }
+
+    setColors(style);
   });
   const $$ = (id) => document.getElementById(id);
-
-  // async function fetchFiles() {
-  //   return await fetch("files.csv")
-  //     .then((res) => res.text())
-  //     .then((text) => {
-  //       const lines = text.split("\n");
-  //       return lines
-  //         .map((line) => {
-  //           const [title, before, after] = line.split(/\s*,\s*/);
-  //           return { title, before, after };
-  //         })
-  //         .filter(({ title, before, after }) => title && before && after);
-  //     });
-  // }
-
-  // const files = await fetchFiles();
 
   const $audioItem = document.getElementById("audio-list-item");
   const $audioList = document.getElementById("audio-list");
@@ -45,6 +31,13 @@
   let current = null;
   let fileIndex = 0;
   bindEvents();
+
+  function setColors(style) {
+    const r = document.querySelector(":root");
+    // Set the value of variable --blue to another value (in this case "lightblue")
+    r.style.setProperty("--primary-color", style.mainColor);
+    r.style.setProperty("--accent-color", style.altColor);
+  }
 
   function renderAudioFiles(newFiles) {
     files = newFiles;

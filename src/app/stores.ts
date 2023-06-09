@@ -56,8 +56,8 @@ const initialDoc = (): Doc => ({
 });
 
 export const buildPlaylist = () => ({
-  mainColor: "#000000",
-  altColor: "#555555",
+  mainColor: "#004f6b",
+  altColor: "#f4741f",
   items: [],
 });
 
@@ -120,6 +120,8 @@ export async function saveDoc(userDocToSave: ContextUserDoc) {
   } else {
     console.log("doc updated", data);
   }
+
+  cleanUpBucket();
 }
 
 export const debouncedSaveDoc = debounce(saveDoc, 1000);
@@ -225,10 +227,10 @@ function cleanUpBucket() {
     );
   }, [] as string[]);
 
-  console.log("All user files used", usedFiles);
-
   // Checks for non-used files and deletes them from the bucket
   $bucketFiles.forEach((file) => {});
+
+  // TODO
 }
 
 // ██╗   ██╗████████╗██╗██╗     ███████╗
