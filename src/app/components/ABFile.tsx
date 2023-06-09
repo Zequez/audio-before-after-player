@@ -4,6 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { supabase, user, UserFile, uploadUserFile } from "../stores";
 import { useReadable } from "react-use-svelte-store";
+import { sizeInBToMb, extractNameFromUrl } from "../../lib/utils";
 
 import dragIcon from "../icons/drag.svg";
 import playIcon from "../icons/play.svg";
@@ -186,22 +187,5 @@ const BeforeAfterItem = ({
     </button>
   </div>
 );
-
-const sizeInBToMb = (size: number) => {
-  return Math.round((size / 1024 / 1024) * 100) / 100;
-};
-
-const timeInSecondsToMinutesSeconds = (time: number) => {
-  const minutes = Math.floor(time / 60);
-  const seconds = Math.round(time - minutes * 60);
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-};
-
-const extractNameFromUrl = (url: string) => {
-  const parts = url.split("/");
-  return parts[parts.length - 1];
-};
 
 export default ABFile;

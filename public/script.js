@@ -1,41 +1,31 @@
 // Fetch files.csv and parse into {title, before, after} objects
 (async () => {
+  window.addEventListener("message", ({ data: { files, style } }) => {
+    console.log("IFrame! Received data", files, style);
+    if (files.length) {
+      renderAudioFiles(files);
+    }
+  });
   const $$ = (id) => document.getElementById(id);
 
-  async function fetchFiles() {
-    return await fetch("files.csv")
-      .then((res) => res.text())
-      .then((text) => {
-        const lines = text.split("\n");
-        return lines
-          .map((line) => {
-            const [title, before, after] = line.split(/\s*,\s*/);
-            return { title, before, after };
-          })
-          .filter(({ title, before, after }) => title && before && after);
-      });
-  }
+  // async function fetchFiles() {
+  //   return await fetch("files.csv")
+  //     .then((res) => res.text())
+  //     .then((text) => {
+  //       const lines = text.split("\n");
+  //       return lines
+  //         .map((line) => {
+  //           const [title, before, after] = line.split(/\s*,\s*/);
+  //           return { title, before, after };
+  //         })
+  //         .filter(({ title, before, after }) => title && before && after);
+  //     });
+  // }
 
-  const files = await fetchFiles();
+  // const files = await fetchFiles();
 
   const $audioItem = document.getElementById("audio-list-item");
   const $audioList = document.getElementById("audio-list");
-  const $audioItems = [];
-  function renderAudioFiles() {
-    files.forEach((file, i) => {
-      const $newAudioItem = $audioItem.content.cloneNode(true);
-      $newAudioItemRoot = $newAudioItem.firstElementChild;
-      $newAudioItem.querySelector(".audio-item-title").innerText = file.title;
-      // $newAudioItem.querySelector(".audio-item-play");
-      $newAudioItemRoot.addEventListener("click", () => {
-        loadFile(i, true);
-      });
-      $audioList.appendChild($newAudioItem);
-      $audioItems.push($newAudioItemRoot);
-    });
-  }
-  renderAudioFiles();
-
   const $waveform = $$("waveform");
   const $prevButton = $$("prev-button");
   const $playButton = $$("play-button");
@@ -47,13 +37,34 @@
   const $beforeAfterToggle = $$("before-after-toggle");
   const $scrubControl = $$("scrub-control");
 
+  let $audioItems = [];
+  let files = [];
+
   let before = null;
   let after = null;
   let current = null;
   let fileIndex = 0;
-
   bindEvents();
-  loadFile(0);
+
+  function renderAudioFiles(newFiles) {
+    files = newFiles;
+    $audioList.innerHTML = "";
+    $audioItems = [];
+
+    files.forEach((file, i) => {
+      const $newAudioItem = $audioItem.content.cloneNode(true);
+      $newAudioItemRoot = $newAudioItem.firstElementChild;
+      $newAudioItem.querySelector(".audio-item-title").innerText = file.title;
+      // $newAudioItem.querySelector(".audio-item-play");
+      $newAudioItemRoot.addEventListener("click", () => {
+        loadFile(i, true);
+      });
+      $audioList.appendChild($newAudioItem);
+      $audioItems.push($newAudioItemRoot);
+    });
+
+    loadFile(0);
+  }
 
   function bindEvents() {
     $beforeAfterToggle.addEventListener("change", setCurrentPlayfile);
@@ -190,16 +201,16 @@
       $pauseIcon.style.display = "block";
     }
   }
-
-  function formatDuration(duration) {
-    let minutes = Math.floor(duration / 60);
-    let seconds = Math.floor(duration % 60);
-    let formattedDuration =
-      (minutes < 10 ? "0" : "") +
-      minutes +
-      ":" +
-      (seconds < 10 ? "0" : "") +
-      seconds;
-    return formattedDuration;
-  }
 })();
+
+function formatDuration(duration) {
+  let minutes = Math.floor(duration / 60);
+  let seconds = Math.floor(duration % 60);
+  let formattedDuration =
+    (minutes < 10 ? "0" : "") +
+    minutes +
+    ":" +
+    (seconds < 10 ? "0" : "") +
+    seconds;
+  return formattedDuration;
+}

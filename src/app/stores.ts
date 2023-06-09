@@ -2,6 +2,7 @@ import { User } from "@supabase/supabase-js";
 import { writable, get } from "svelte/store";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { debounce } from "lodash";
+import { extractNameFromUrl } from "@/lib/utils";
 
 export const supabase = createBrowserSupabaseClient();
 
@@ -27,7 +28,6 @@ export type AbItem = {
 };
 
 export type Playlist = {
-  slug: string;
   mainColor: string;
   altColor: string;
   items: AbItem[];
@@ -56,7 +56,6 @@ const initialDoc = (): Doc => ({
 });
 
 export const buildPlaylist = () => ({
-  slug: generateRandomString(),
   mainColor: "#000000",
   altColor: "#555555",
   items: [],
@@ -151,7 +150,9 @@ export async function loadUserFiles(user: User) {
   });
 
   if (!error) {
-    bucketFiles.set(data as any as BucketFile[]);
+    const loadedBucketFiles = data as any as BucketFile[];
+    bucketFiles.set(loadedBucketFiles);
+    cleanUpBucket();
   } else {
     console.error("Error fetching user files", error);
   }
@@ -175,7 +176,7 @@ export async function uploadUserFile(file: File): Promise<UserFile | null> {
         return null;
       } else {
         const newBucketFile: BucketFile = {
-          name: data.path,
+          name: file.name,
           metadata: { size: file.size },
         };
         console.log("Uploaded file", newBucketFile);
@@ -205,6 +206,29 @@ function bucketToUserFile(bucketFile: BucketFile): UserFile {
 
 function findExistingFile(fileName: string) {
   return get(bucketFiles).find((file) => file.name === fileName);
+}
+
+function cleanUpBucket() {
+  const $userDoc = get(userDoc);
+  const $bucketFiles = get(bucketFiles);
+
+  const usedFiles = $userDoc.doc.playlists.reduce((acc, playlist) => {
+    return acc.concat(
+      playlist.items.reduce((acc2, item) => {
+        item.afterFile;
+        item.beforeFile;
+        if (item.afterFile) acc2.push(extractNameFromUrl(item.afterFile.path));
+        if (item.beforeFile)
+          acc2.push(extractNameFromUrl(item.beforeFile.path));
+        return acc2;
+      }, [] as string[])
+    );
+  }, [] as string[]);
+
+  console.log("All user files used", usedFiles);
+
+  // Checks for non-used files and deletes them from the bucket
+  $bucketFiles.forEach((file) => {});
 }
 
 // ██╗   ██╗████████╗██╗██╗     ███████╗

@@ -6,6 +6,7 @@ import { useReadable } from "react-use-svelte-store";
 import cx from "classnames";
 import Authentication from "./Authentication";
 import PlayerConfigurator from "./PlayerConfigurator";
+import Player from "./Player";
 import Button from "./ui/Button";
 import logo from "../logo.svg";
 import {
@@ -70,10 +71,9 @@ export default function ConfigPage() {
           <div className="flex mb-8 flex-col lg:flex-row">
             {/* <SortableList /> */}
             <PlayerConfigurator playlist={playlist} onChange={updatePlaylist} />
-            <iframe
-              className="rounded-md bg-[#EEF0F2] shadow-md w-full lg:w-[500px] h-[810px] flex-shrink-0"
-              src="/matt.html"
-            ></iframe>
+            <div className="lg:w-[550px] h-[810px] flex-shrink-0">
+              <Player playlist={playlist} />
+            </div>
           </div>
           <div className="rounded-md bg-[#EEF0F2] shadow-md p-4">
             <h2 className="text-2xl mb-4 opacity-80">Embed playlist player</h2>
