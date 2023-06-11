@@ -39,18 +39,34 @@ export type ContextUserDoc = {
   context: string;
   ownerId: string;
   doc: Doc;
+  restricted: RestrictedDoc;
 };
 
 export type Doc = {
   playlists: Playlist[];
 };
 
+export type RestrictedDoc =
+  | {
+      subscription: {
+        tier: "100mb" | "1000mb";
+        paymentDueAt: Date;
+        stripeId: string;
+      };
+    }
+  | {
+      subscription: null;
+    };
+
 const initialContextUserDoc = (userId: string): ContextUserDoc => ({
   id: "",
   context: "soundtoggle",
   ownerId: userId,
   doc: initialDoc(),
+  restricted: initialRestrictedDoc(),
 });
+
+const initialRestrictedDoc = (): RestrictedDoc => ({ subscription: null });
 
 const initialDoc = (): Doc => ({
   playlists: [buildPlaylist()],
@@ -243,8 +259,6 @@ function cleanUpBucket() {
       }
     });
   }
-
-  // TODO
 }
 
 // ██╗   ██╗████████╗██╗██╗     ███████╗
