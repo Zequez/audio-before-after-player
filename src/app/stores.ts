@@ -1,5 +1,5 @@
 import { User } from "@supabase/supabase-js";
-import { writable, get } from "svelte/store";
+import { writable, get, derived } from "svelte/store";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { debounce } from "lodash";
 import { extractNameFromUrl } from "@/lib/utils";
@@ -143,6 +143,12 @@ type BucketFile = {
 };
 
 export const bucketFiles = writable<BucketFile[]>([]);
+
+export const usedStorage = derived(bucketFiles, ($bucketFiles) => {
+  return $bucketFiles.reduce((acc, file) => {
+    return acc + file.metadata.size;
+  }, 0);
+});
 
 export async function loadUserFiles(user: User) {
   const { data, error } = await supabase.storage.from(BUCKET).list(user.id, {
