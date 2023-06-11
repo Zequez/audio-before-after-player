@@ -1,4 +1,5 @@
 "use client";
+import Script from "next/script";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import ConfigPage from "./components/ConfigPage";
@@ -11,9 +12,12 @@ const Provider = ({
   // initialSession: Session;
 }) => {
   return (
-    <SessionContextProvider supabaseClient={supabase}>
-      {children}
-    </SessionContextProvider>
+    <>
+      <Script async src="https://js.stripe.com/v3/pricing-table.js" />
+      <SessionContextProvider supabaseClient={supabase}>
+        {children}
+      </SessionContextProvider>
+    </>
   );
 };
 

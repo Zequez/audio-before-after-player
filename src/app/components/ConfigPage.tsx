@@ -75,8 +75,10 @@ export default function ConfigPage() {
               <Player playlist={playlist} />
             </div>
           </div>
-          <div className="rounded-md bg-[#EEF0F2] shadow-md p-4">
-            <h2 className="text-2xl mb-4 opacity-80">Embed playlist player</h2>
+          <div className="rounded-md bg-[#EEF0F2] shadow-md p-4 mb-8">
+            <h2 className="text-2xl mb-4 opacity-80 text-center">
+              Embed on your website
+            </h2>
             <div className="flex">
               <input
                 type="text"
@@ -96,6 +98,18 @@ export default function ConfigPage() {
                 COPY
               </Button>
             </div>
+          </div>
+          <div className="rounded-md bg-antiflash shadow-md p-4">
+            <h2 className="text-center text-2xl mb-2 opacity-80">
+              Subscription
+            </h2>
+            <p className="opacity-50 text-center mb-4">
+              Free up to 20MB of files storage
+            </p>
+            <stripe-pricing-table
+              pricing-table-id="prctbl_1NHqQEJgi8a4J0BVw9r6KNpF"
+              publishable-key="pk_test_51NHq08Jgi8a4J0BVZZ38gt8J5eAGsDLb7yu0WGv2MlhodXg8SLaK7cmnzBX8Qz5L1efp1Yy7yellZGUkXYwqtVYr004v6JsQnZ"
+            ></stripe-pricing-table>
           </div>
         </div>
       </div>
