@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Playlist } from "../stores";
 
-export default ({ playlist }: { playlist: Playlist }) => {
+const Player = ({ playlist }: { playlist: Playlist }) => {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeEl = useRef<HTMLIFrameElement>(null);
   // useEffect(() => {
@@ -59,3 +59,5 @@ export default ({ playlist }: { playlist: Playlist }) => {
     ></iframe>
   );
 };
+
+export default Player;

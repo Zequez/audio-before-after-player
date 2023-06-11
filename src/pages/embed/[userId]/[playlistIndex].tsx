@@ -8,6 +8,8 @@ export const metadata = {
   description: "A simple before after audio player",
 };
 
-export default () => (
+const EmbedPage = () => (
   <Player playlist={{ mainColor: "#444", altColor: "#777", items: [] }} />
 );
+
+export default EmbedPage;
