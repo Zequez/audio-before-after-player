@@ -16,7 +16,8 @@ export const user = writable<User | null>(null);
 // ╚═════╝  ╚═════╝  ╚═════╝
 
 export type UserFile = {
-  path: string;
+  url: string;
+  name: string;
   size: number;
 };
 
@@ -205,7 +206,8 @@ function bucketToUserFile(bucketFile: BucketFile): UserFile {
     const filePath = `${$user.id}/${bucketFile.name}`;
     const { data } = supabase.storage.from(BUCKET).getPublicUrl(filePath);
     return {
-      path: data.publicUrl,
+      url: data.publicUrl,
+      name: bucketFile.name,
       size: bucketFile.metadata.size,
     };
   }
@@ -217,24 +219,30 @@ function findExistingFile(fileName: string) {
 }
 
 function cleanUpBucket() {
+  const $user = get(user);
   const $userDoc = get(userDoc);
   const $bucketFiles = get(bucketFiles);
 
-  const usedFiles = $userDoc.doc.playlists.reduce((acc, playlist) => {
-    return acc.concat(
-      playlist.items.reduce((acc2, item) => {
-        item.afterFile;
-        item.beforeFile;
-        if (item.afterFile) acc2.push(extractNameFromUrl(item.afterFile.path));
-        if (item.beforeFile)
-          acc2.push(extractNameFromUrl(item.beforeFile.path));
-        return acc2;
-      }, [] as string[])
-    );
-  }, [] as string[]);
+  if ($user) {
+    const usedFiles = $userDoc.doc.playlists.reduce((acc, playlist) => {
+      return acc.concat(
+        playlist.items.reduce((acc2, item) => {
+          item.afterFile;
+          item.beforeFile;
+          if (item.afterFile) acc2.push(item.afterFile.name);
+          if (item.beforeFile) acc2.push(item.beforeFile.name);
+          return acc2;
+        }, [] as string[])
+      );
+    }, [] as string[]);
 
-  // Checks for non-used files and deletes them from the bucket
-  $bucketFiles.forEach((file) => {});
+    // Checks for non-used files and deletes them from the bucket
+    $bucketFiles.forEach((file) => {
+      if (!usedFiles.includes(file.name)) {
+        supabase.storage.from(BUCKET).remove([`${$user.id}/${file.name}`]);
+      }
+    });
+  }
 
   // TODO
 }

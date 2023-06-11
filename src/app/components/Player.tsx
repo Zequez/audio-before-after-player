@@ -35,8 +35,8 @@ const Player = ({ playlist }: { playlist: Playlist }) => {
         .filter((item) => item.beforeFile && item.afterFile)
         .map((item) => ({
           title: item.title,
-          before: item.beforeFile?.path as string,
-          after: item.afterFile?.path as string,
+          before: item.beforeFile?.url as string,
+          after: item.afterFile?.url as string,
         }));
 
     const style = {

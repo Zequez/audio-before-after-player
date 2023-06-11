@@ -95,7 +95,7 @@ const FileItem = ({ title, file, onChange }: FileItemProps) => (
     </div>
     {file ? (
       <BeforeAfterItem
-        file={file.path}
+        fileName={file.name}
         size={file.size}
         onRemove={() => onChange(null)}
       />
@@ -148,14 +148,14 @@ const UploadItem = ({
 };
 
 type BeforeAfterItemProps = {
-  file: string;
+  fileName: string;
   size: number;
   // length: number;
   // onPlay: () => void;
   onRemove: () => void;
 };
 const BeforeAfterItem = ({
-  file,
+  fileName,
   size,
   // length,
   // onPlay,
@@ -165,7 +165,7 @@ const BeforeAfterItem = ({
     <div className="relative rounded-r-md mr-0.5 flex-grow flex items-center font-mono text-xs">
       <div className="absolute inset-0 flex items-center px-1 overflow-hidden w-full whitespace-nowrap border rounded-md border-night/30 text-night/40">
         <div className="flex-grow text-ellipsis text-[0.75rem] overflow-hidden mr-1">
-          {extractNameFromUrl(file)}
+          {fileName}
         </div>
         <div className="">
           {/* {sizeInKBToMb(size)}MB {timeInSecondsToMinutesSeconds(length)} */}
