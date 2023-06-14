@@ -1,8 +1,18 @@
 import { useRef } from "react";
 import Button from "./ui/Button";
 
-const EmbedCopy = ({ value }: { value: string }) => {
+const EmbedCopy = ({
+  userId,
+  playlistIndex,
+}: {
+  userId: string;
+  playlistIndex: number;
+}) => {
   const embedInputBoxEl = useRef<HTMLInputElement>(null);
+
+  const embedValue = `<iframe src="https://app.soundtoggle.io/embed/${
+    userId || ""
+  }/${playlistIndex}" sandbox="allow-scripts" width="500px" height="815px"/>`;
 
   return (
     <div className="rounded-md bg-[#EEF0F2] shadow-md p-4 mb-8">
@@ -15,7 +25,7 @@ const EmbedCopy = ({ value }: { value: string }) => {
           ref={embedInputBoxEl}
           disabled
           className="w-full p-2 rounded-l-md border border-r-0 border-night/50 shadow-inner text-black/50 bg-white"
-          value={value}
+          value={embedValue}
           onChange={() => {}}
         />
         <Button
