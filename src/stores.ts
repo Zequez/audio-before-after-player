@@ -239,7 +239,7 @@ function cleanUpBucket() {
   const $userDoc = get(userDoc);
   const $bucketFiles = get(bucketFiles);
 
-  if ($user) {
+  if ($user && $userDoc.id) {
     const usedFiles = $userDoc.doc.playlists.reduce((acc, playlist) => {
       return acc.concat(
         playlist.items.reduce((acc2, item) => {

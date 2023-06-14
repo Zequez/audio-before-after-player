@@ -1,3 +1,4 @@
+"use client";
 import { useRef, useEffect, useState } from "react";
 import { Playlist } from "../stores";
 
@@ -53,7 +54,6 @@ const Player = ({ playlist }: { playlist: Playlist }) => {
   return (
     <iframe
       ref={iframeEl}
-      onLoad={(ev) => console.log("IFRAME!", ev.target)}
       className="rounded-md bg-[#EEF0F2] shadow-md w-full h-full"
       src="/matt.html"
     ></iframe>

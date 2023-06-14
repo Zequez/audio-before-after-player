@@ -2,12 +2,12 @@
 import Image from "next/image";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { supabase, user, UserFile, uploadUserFile } from "../stores";
+import { supabase, user, UserFile, uploadUserFile } from "@/stores";
 import { useReadable } from "react-use-svelte-store";
-import { sizeInBToMb, extractNameFromUrl } from "../../lib/utils";
+import { sizeInBToMb, extractNameFromUrl } from "@/lib/utils";
 
-import dragIcon from "../icons/drag.svg";
-import playIcon from "../icons/play.svg";
+import dragIcon from "@/icons/drag.svg";
+import playIcon from "@/icons/play.svg";
 import { useState } from "react";
 
 type ABFileProps = {

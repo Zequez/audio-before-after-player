@@ -38,12 +38,6 @@ const EmbedPage = async ({
     throw new Error(
       `Error connecting to the database. Error code: ${error.code}`
     );
-    // return (
-    //   <div>
-    //     throwf
-    //     return <ErrorPage statusCode={500} />
-    //   </div>
-    // );
   }
 
   const index = parseInt(params.playlistIndex);

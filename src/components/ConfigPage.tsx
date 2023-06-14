@@ -4,12 +4,12 @@ import { useRef } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useReadable } from "react-use-svelte-store";
 import cx from "classnames";
-import { sizeInBToMb } from "../../lib/utils";
+import { sizeInBToMb } from "@/lib/utils";
 import Authentication from "./Authentication";
 import PlayerConfigurator from "./PlayerConfigurator";
 import Player from "./Player";
 
-import logo from "../logo.svg";
+import logo from "@/logo.svg";
 import {
   user as storeUser,
   loadUserDoc,
@@ -20,7 +20,7 @@ import {
   bucketFiles,
   usedStorage,
   debouncedSaveDoc,
-} from "../stores";
+} from "@/stores";
 import { useEffect } from "react";
 import EmbedCopy from "./EmbedCopy";
 // import SortableList from "./SortableList";

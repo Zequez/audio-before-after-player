@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #011638;
+}
+
+iframe {
+  display: block;
+  border: 0;
+  width: 100vw;
+  height: 100vh;
+}
