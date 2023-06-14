@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useEffect, useState } from "react";
-import { Playlist } from "../stores";
+import { Playlist } from "../types";
 
 const Player = ({ playlist }: { playlist: Playlist }) => {
   const [iframeLoaded, setIframeLoaded] = useState(false);

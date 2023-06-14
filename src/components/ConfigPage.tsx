@@ -6,12 +6,11 @@ import Authentication from "./Authentication";
 import PlayerConfigurator from "./PlayerConfigurator";
 import Player from "./Player";
 
+import { Playlist, Doc } from "@/types";
 import {
   user as storeUser,
   loadUserDoc,
   loadUserFiles,
-  Playlist,
-  Doc,
   userDoc,
   debouncedSaveDoc,
 } from "@/stores";

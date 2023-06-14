@@ -2,12 +2,12 @@
 import Image from "next/image";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { supabase, user, UserFile, uploadUserFile } from "@/stores";
+import { UserFile } from "@/types";
+import { user, uploadUserFile } from "@/stores";
 import { useReadable } from "react-use-svelte-store";
-import { sizeInBToMb, extractNameFromUrl } from "@/lib/utils";
+import { sizeInBToMb } from "@/lib/utils";
 
 import dragIcon from "@/icons/drag.svg";
-import playIcon from "@/icons/play.svg";
 import { useState } from "react";
 
 type ABFileProps = {
@@ -150,15 +150,11 @@ const UploadItem = ({
 type BeforeAfterItemProps = {
   fileName: string;
   size: number;
-  // length: number;
-  // onPlay: () => void;
   onRemove: () => void;
 };
 const BeforeAfterItem = ({
   fileName,
   size,
-  // length,
-  // onPlay,
   onRemove,
 }: BeforeAfterItemProps) => (
   <div className="flex flex-grow items-stretch text-sm group ml-1 ">
@@ -167,18 +163,9 @@ const BeforeAfterItem = ({
         <div className="flex-grow text-ellipsis text-[0.75rem] overflow-hidden mr-1">
           {fileName}
         </div>
-        <div className="">
-          {/* {sizeInKBToMb(size)}MB {timeInSecondsToMinutesSeconds(length)} */}
-          {sizeInBToMb(size)}MB
-        </div>
+        <div className="">{sizeInBToMb(size)}MB</div>
       </div>
     </div>
-    {/* <button
-      className="w-6 bg-play-green text-antiflash flex items-center justify-center cursor-pointer rounded-l-md"
-      onClick={() => console.log("TRIGGER PLAY")}
-    >
-      <Image src={playIcon} alt="Play" width={10} />
-    </button> */}
     <button
       className="font-bold w-6 ml-1 rounded-md border-solid border-2 bg-delete-red/20 border-delete-red/60 hover:bg-delete-red/30 text-delete-red cursor-pointer"
       onClick={() => onRemove()}

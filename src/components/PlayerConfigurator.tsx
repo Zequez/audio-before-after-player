@@ -1,14 +1,6 @@
 import { useEffect } from "react";
+import { Playlist, AbItem } from "@/types";
 import ABFilesContainer from "./ABFilesContainer";
-import {
-  // playlist,
-  // updatePlaylist,
-  userDoc,
-  // buildPlaylist2,
-  Playlist,
-  AbItem,
-} from "../stores";
-import { useReadable } from "react-use-svelte-store";
 
 const PlayerConfigurator = ({
   playlist,

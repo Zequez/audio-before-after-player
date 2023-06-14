@@ -1,5 +1,6 @@
 "use client";
-import { AbItem, initialAbItem, UserFile } from "../stores";
+import { AbItem, UserFile } from "@/types";
+import { initialAbItem } from "@/stores";
 import { arrayMove } from "@dnd-kit/sortable";
 import {
   DndContext,
