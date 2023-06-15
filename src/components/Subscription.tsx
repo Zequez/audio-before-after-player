@@ -6,7 +6,10 @@ import Script from "next/script";
 export default function Subscription() {
   const $usedStorage = useReadable(usedStorage);
 
-  const showSubs = document.location.search.match(/subscription/);
+  const showSubs =
+    typeof document !== undefined
+      ? document.location.search.match(/subscription/)
+      : false;
 
   return (
     <div className="rounded-md bg-antiflash shadow-md p-4">
