@@ -1,0 +1,73 @@
+
+.switch {
+  /* background-color: hsla(0 0% 100% / 0.9); */
+  background-color: hsla(0 0% 0% / 0.2);
+  border-radius: calc(var(--switch-h) / 2);
+  cursor: pointer;
+  display: inline-block;
+  height: var(--switch-h);
+  padding: 2px;
+  position: relative;
+  vertical-align: top;
+  width: var(--switch-w);
+}
+.switch-input {
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+}
+.switch-color {
+  background: var(--primary-color) none repeat scroll 0 0;
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  transition: all 0.15s ease-out 0s;
+  box-shadow: inset 0 0 4px 3px hsla(0 0% 0% / 0.1), inset 0 0 1px 2px hsla(0 0% 0% / 0.15)
+}
+.switch-input:checked ~ .switch-color {
+  background: var(--accent-color) none repeat scroll 0 0;
+
+}
+.switch-handle {
+  background-color: #fff;
+  border-radius: 50%;
+  height: calc(var(--switch-h) - 10px);
+  left: 5.5px;
+  position: absolute;
+  top: 5px;
+  transition: left 0.15s ease-out 0s;
+  width: calc(var(--switch-h) - 10px);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.25);
+}
+.switch-input:checked ~ .switch-handle {
+  left: calc(var(--switch-w) - var(--switch-h) + 5px);
+}
+
+.scrub-control {
+  width: 100%;
+  -webkit-appearance: none;
+  background-color: rgba(0,0,0,0.25);
+  height: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.scrub-control::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: white;
+  transition: transform 0.25s;
+}
+
+.scrub-control::-webkit-slider-thumb:hover {
+  background-color: var(--accent-color);
+  transform: scale(1.2);
+}
+
+.scrub-control:active {
+  cursor: grabbing;
+}

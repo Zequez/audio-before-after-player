@@ -1,15 +1,21 @@
+@config ".../../../../../tailwind.embed.config.js";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #004f6b;
+  --accent-color: #f4741f;
+  --switch-h: 32px;
+  --switch-w: calc( var(--switch-h) * 1.8 );
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #011638;
-}
-
-iframe {
-  display: block;
-  border: 0;
-  width: 100vw;
-  height: 100vh;
+  background: var(--primary-color);
 }

@@ -4,7 +4,7 @@ import { useReadable } from "react-use-svelte-store";
 import cx from "classnames";
 import Authentication from "./Authentication";
 import PlayerConfigurator from "./PlayerConfigurator";
-import Player from "./Player";
+import NewPlayer from "./NewPlayer/NewPlayer";
 
 import { Playlist, Doc } from "@/types";
 import {
@@ -59,8 +59,8 @@ export default function ConfigPage() {
           <div className="flex mb-8 flex-col lg:flex-row">
             {/* <SortableList /> */}
             <PlayerConfigurator playlist={playlist} onChange={updatePlaylist} />
-            <div className="lg:w-[550px] h-[810px] flex-shrink-0">
-              <Player playlist={playlist} />
+            <div className="lg:w-[550px] h-[810px] flex-shrink-0 overflow-hidden rounded-md">
+              <NewPlayer playlist={playlist} />
             </div>
           </div>
           <EmbedCopy userId={user?.id || ""} playlistIndex={playlistIndex} />

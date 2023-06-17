@@ -2,7 +2,8 @@
 // import Layout from "@/app/layout";
 import { notFound } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import Player from "@/components/Player";
+import { Playlist } from "@/types";
+import NewPlayer from "@/components/NewPlayer/NewPlayer";
 
 if (
   !process.env.NEXT_PUBLIC_SUPABASE_URL ||
@@ -50,7 +51,9 @@ const EmbedPage = async ({
     notFound();
   }
 
-  return <Player playlist={data[0].doc.playlists[index]} />;
+  const playlist = data[0].doc.playlists[index] as Playlist;
+
+  return <NewPlayer playlist={playlist} />;
 };
 
 export default EmbedPage;
