@@ -7,7 +7,7 @@ export default function Subscription() {
   const $usedStorage = useReadable(usedStorage);
 
   const showSubs =
-    typeof document !== undefined
+    typeof document !== "undefined"
       ? document.location.search.match(/subscription/)
       : false;
 
