@@ -7,8 +7,6 @@
 :root {
   --primary-color: #004f6b;
   --accent-color: #f4741f;
-  --switch-h: 32px;
-  --switch-w: calc( var(--switch-h) * 1.8 );
 }
 
 * {

@@ -8,7 +8,7 @@ export default function Subscription() {
 
   const showSubs =
     typeof document !== "undefined"
-      ? document.location.search.match(/subscription/)
+      ? !!document.location.search.match(/subscription/)
       : false;
 
   return (
