@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 
 async function getData() {
   const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_SUPABASE_SERVICE_ROLE
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+    process.env.NEXT_SUPABASE_SERVICE_ROLE || ""
   );
   const { data: users, error } = await supabase.auth.admin.listUsers({
     page: 1,
@@ -17,15 +17,13 @@ async function getData() {
   console.log(error);
 
   if (error) {
-    throw new Error(
-      `Error connecting to the database. Error code: ${error.code}`
-    );
+    throw new Error(`Error connecting to the database`);
   }
 
   return users.users;
 }
 
-export default async function Page({ mmm }: { mmm: string }) {
+export default async function Page() {
   const users = await getData();
   console.log(users);
   // const [users, setUsers] = useState<User[]>([]);
