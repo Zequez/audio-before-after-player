@@ -95,6 +95,9 @@ export async function saveDoc(userDocToSave: ContextUserDoc) {
     console.error("Error updating doc", error);
   } else {
     console.log("doc updated", data);
+    fetch(`/api/revalidate?path=/embed/${userDocToSave.ownerId}`, {
+      method: "POST",
+    });
   }
 
   cleanUpBucket();

@@ -5,6 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 import { Playlist } from "@/types";
 import NewPlayer from "@/components/NewPlayer/NewPlayer";
 
+// export const revalidate = 60;
+
 if (
   !process.env.NEXT_PUBLIC_SUPABASE_URL ||
   !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -29,6 +31,7 @@ const EmbedPage = async ({
 }: {
   params: { userId: string; playlistIndex: string };
 }) => {
+  console.log("Running code!");
   const { data, error } = await supabase
     .from("docs")
     .select("*")
