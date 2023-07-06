@@ -79,7 +79,7 @@ export default function ConfigPage() {
           ></div>
           <div
             className={cx(
-              "absolute bottom-4 right-24 rounded-md shadow-md bg-white w-[500px] h-[800px] overflow-hidden z-20"
+              "absolute bottom-24 top-20 sm:top-auto right-4 sm:right-24 rounded-md shadow-md bg-white left-4 sm:left-auto sm:w-[500px] sm:h-[800px] overflow-hidden z-20"
             )}
           >
             <iframe
