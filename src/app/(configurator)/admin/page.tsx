@@ -43,17 +43,17 @@ export default async function Page({ mmm }: { mmm: string }) {
     <div className="bg-antiflash rounded-md p-8">
       <table className="border border-black/20 w-full rounded-md">
         <thead>
-          <tr>
-            <th>Email</th>
-            <th>Created At</th>
+          <tr className="border-b border-black/20">
+            <th className="border-r border-black/20">Email</th>
+            <th className="border-r border-black/20">Created At</th>
             <th>Data</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.email}</td>
-              <td>{user.created_at}</td>
+            <tr key={user.id} className="border-b border-black/5">
+              <td className="border-r border-black/20 p-1">{user.email}</td>
+              <td className="border-r border-black/20">{user.created_at}</td>
               <td></td>
             </tr>
           ))}
