@@ -20,7 +20,7 @@ export default function Subscription() {
       <div className="flex text-3xl items-center justify-center mb-4 space-x-4">
         <div className="text-right text-3xl opacity-75">You are using</div>
         <div className="bg-saffron/10 border-saffron/40 text-night/50 font-bold border-2 rounded-lg p-8 text-center">
-          <div>{sizeInBToMb($usedStorage)}mb / 15mb</div>
+          <div>{sizeInBToMb($usedStorage)}mb / 25mb</div>
           <div className="text-lg font-normal">of free storage</div>
         </div>
       </div>
