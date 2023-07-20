@@ -1,7 +1,5 @@
 import "@/globals.css";
 import { Inter } from "next/font/google";
-import Image from "next/image";
-import logo from "@/logo.svg";
 import AuthProvider from "@/lib/AuthProvider";
 import Header from "@/components/Header";
 
