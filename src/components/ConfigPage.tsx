@@ -1,8 +1,7 @@
 "client only";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser, useSessionContext } from "@supabase/auth-helpers-react";
 import { useReadable } from "react-use-svelte-store";
 import cx from "classnames";
-import Authentication from "./Authentication";
 import PlayerConfigurator from "./PlayerConfigurator";
 import NewPlayer from "./NewPlayer/NewPlayer";
 
@@ -17,8 +16,11 @@ import {
 import { useEffect, useRef, useState } from "react";
 import EmbedCopy from "./EmbedCopy";
 import Subscription from "./Subscription";
+import Spinner from "./ui/Spinner";
 
 export default function ConfigPage() {
+  const { isLoading } = useSessionContext();
+
   const user = useUser();
   const $doc = useReadable(userDoc);
   const playlistIndex = 0;
@@ -56,7 +58,6 @@ export default function ConfigPage() {
 
   return (
     <>
-      <Authentication />
       <button
         className="fixed bottom-4 right-4 bg-saffron hover:opacity-90 z-50 p-4 rounded-full shadow-md text-white"
         onClick={(ev) => !feedbackCardVisible && openFeedbackCard(ev)}
@@ -91,22 +92,28 @@ export default function ConfigPage() {
           </div>
         </div>
       ) : null}
-      <div className="relative">
-        {!user ? (
-          <div className="absolute top-[-10px] left-[-10px] right-[-10px] bottom-[-10px] rounded bg-antiflash/20 z-40"></div>
-        ) : null}
-        <div className={cx({ "blur-sm": !user || !$doc.id })}>
-          <div className="flex mb-8 flex-col lg:flex-row">
-            {/* <SortableList /> */}
-            <PlayerConfigurator playlist={playlist} onChange={updatePlaylist} />
-            <div className="lg:w-[550px] h-[810px] flex-shrink-0 overflow-hidden rounded-md">
-              <NewPlayer playlist={playlist} />
+      {user ? (
+        <div className="relative">
+          <div className={cx({ "blur-sm": !user || !$doc.id })}>
+            <div className="flex mb-8 flex-col lg:flex-row">
+              {/* <SortableList /> */}
+              <PlayerConfigurator
+                playlist={playlist}
+                onChange={updatePlaylist}
+              />
+              <div className="lg:w-[550px] h-[810px] flex-shrink-0 overflow-hidden rounded-md">
+                <NewPlayer playlist={playlist} />
+              </div>
             </div>
+            <EmbedCopy userId={user?.id || ""} playlistIndex={playlistIndex} />
+            <Subscription />
           </div>
-          <EmbedCopy userId={user?.id || ""} playlistIndex={playlistIndex} />
-          <Subscription />
         </div>
-      </div>
+      ) : (
+        <div className="flex h-[500px] items-center justify-center">
+          <Spinner />
+        </div>
+      )}
     </>
   );
 }
