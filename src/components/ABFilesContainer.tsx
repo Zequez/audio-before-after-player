@@ -17,6 +17,7 @@ import {
 
 import ABFile from "./ABFile";
 import Button from "./ui/Button";
+import { useEffect, useRef } from "react";
 
 const ABFilesContainer = ({
   items,
@@ -27,6 +28,7 @@ const ABFilesContainer = ({
 }) => {
   // const $abItems = useReadable(store.abItems);
   const sensors = useSensors(useSensor(PointerSensor));
+  const itemsRef = useRef(items);
 
   const onPlay = (file: string) => {};
   const onUploadEnds = () => {};
@@ -36,6 +38,10 @@ const ABFilesContainer = ({
     newItems.splice(i, 1);
     onChange(newItems);
   };
+
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   const onTitleChange = (i: number) => (newTitle: string) => {
     const updatedItem = { ...items[i], title: newTitle };
@@ -52,8 +58,8 @@ const ABFilesContainer = ({
     (i: number, aOrB: "beforeFile" | "afterFile") =>
     (file: UserFile | null) => {
       console.log("Changing file!", i, aOrB, file);
-      const newItem = { ...items[i], [aOrB]: file };
-      const newItems = [...items];
+      const newItem = { ...itemsRef.current[i], [aOrB]: file };
+      const newItems = [...itemsRef.current];
       newItems.splice(i, 1, newItem);
       console.log(newItems);
       onChange(newItems);

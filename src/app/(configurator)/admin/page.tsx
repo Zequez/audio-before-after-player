@@ -14,8 +14,6 @@ async function getData() {
     perPage: 1000,
   });
 
-  console.log(error);
-
   if (error) {
     throw new Error(`Error connecting to the database`);
   }
