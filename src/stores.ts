@@ -60,9 +60,11 @@ export const loadUserDoc = async (user: User) => {
     let loadedUserDoc = userDocs[0];
     if (!loadedUserDoc) {
       console.log("No docs for user in DB, creating initial doc");
+      const initialDoc = initialContextUserDoc(user.id);
+      delete (initialDoc as any).id;
       const { data: createdDoc, error } = await supabase
         .from("docs")
-        .insert(initialContextUserDoc(user.id))
+        .insert(initialDoc)
         .single();
       if (error) {
         console.error("Error creating doc", error);
