@@ -31,7 +31,7 @@ const Authentication: React.FC<AuthProps> = () => {
   return (
     <div className="">
       <h2 className="text-3xl font-light mb-8 text-center text-antiflash">
-        Let's get you set up
+        Let&apos;s get you set up
       </h2>
       {isLoading ? (
         <div className="h-96 flex items-center justify-center">
