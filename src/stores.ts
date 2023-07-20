@@ -1,12 +1,12 @@
 import { User } from "@supabase/supabase-js";
 import { writable, get, derived } from "svelte/store";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { debounce } from "lodash";
 import { extractNameFromUrl } from "@/lib/utils";
 
 import { ContextUserDoc, RestrictedDoc, Doc, AbItem, UserFile } from "./types";
 
-export const supabase = createBrowserSupabaseClient();
+export const supabase = createPagesBrowserClient();
 
 export const user = writable<User | null>(null);
 
