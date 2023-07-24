@@ -13,7 +13,6 @@ let pausedForScrub = false;
 export default function NewPlayer({ playlist }: { playlist: Playlist }) {
   const [beforeAfter, setBeforeAfter] = useState(false);
   const [itemPlayingIndex, setItemPlayingIndex] = useState<null | number>(null);
-  const [audioIsPlaying, setAudioIsPlaying] = useState(false);
   const [scrubPosition, setScrubPosition] = useState(0);
   const [multiAudio, setMultiAudio] = useState<null | MultiAudio>(null);
   const [currentTime, setCurrentTime] = useState(0);
@@ -37,7 +36,6 @@ export default function NewPlayer({ playlist }: { playlist: Playlist }) {
 
   useEffect(() => {
     setItemPlayingIndex(null);
-    setAudioIsPlaying(false);
     setCurrentTime(0);
     setAudioDuration(0);
     setScrubPosition(0);
@@ -68,7 +66,6 @@ export default function NewPlayer({ playlist }: { playlist: Playlist }) {
         }
         setMultiAudio(newMultiAudio);
         setItemPlayingIndex(index);
-        setAudioIsPlaying(true);
         newMultiAudio.play();
         setIsLoading(true);
         newMultiAudio.onLoadFinishes(() => {
@@ -80,11 +77,10 @@ export default function NewPlayer({ playlist }: { playlist: Playlist }) {
         });
       } else {
         // Clicked the same file, just playPause it without loading
-        audioIsPlaying ? multiAudio?.pause() : multiAudio?.play();
-        setAudioIsPlaying(!audioIsPlaying);
+        multiAudio?.paused ? multiAudio?.play() : multiAudio?.pause();
       }
     },
-    [itemPlayingIndex, audioIsPlaying, multiAudio, beforeAfter, items]
+    [itemPlayingIndex, multiAudio, beforeAfter, items]
   );
 
   const handleToggle = useCallback(() => {
@@ -169,6 +165,8 @@ export default function NewPlayer({ playlist }: { playlist: Playlist }) {
     }
   }, [itemPlayingIndex, multiAudio, items]);
 
+  const audioIsPlaying = multiAudio ? !multiAudio.paused : false;
+
   return (
     <>
       <style>
@@ -185,13 +183,13 @@ export default function NewPlayer({ playlist }: { playlist: Playlist }) {
           <div className="flex flex-col items-center">
             <div className="flex items-center mt-4">
               <button
-                className="cursor-pointer border-0 box-border h-12 w-12 bg-white rounded-full p-3 text-gray-700 shadow-md hover:bg-[var(--accent-color)] hover:text-white/90 hover:scale-110 transition"
+                className="cursor-pointer border-0 box-border h-12 w-12 bg-white rounded-full p-3 text-gray-700 shadow-md active:scale-95 transition"
                 onClick={() => handlePrev()}
               >
-                <span className="flex mr-0.5 mt-0.25">{PrevIcon}</span>
+                <span className="flex pr-0.5 pt-0.25 h-full">{PrevIcon}</span>
               </button>
               <button
-                className="cursor-pointer border-0 box-border h-16 w-16 bg-white rounded-full p-4 text-gray-700 shadow-md mx-2 hover:bg-[var(--accent-color)] hover:text-white/90 hover:scale-110 transition"
+                className="cursor-pointer border-0 box-border h-16 w-16 bg-white rounded-full p-4 text-gray-700 shadow-md mx-2 active:scale-95 transition"
                 onClick={() => handlePlayPauseControl()}
               >
                 <span
@@ -203,10 +201,10 @@ export default function NewPlayer({ playlist }: { playlist: Playlist }) {
                 </span>
               </button>
               <button
-                className="cursor-pointer border-0 box-border h-12 w-12 bg-white rounded-full p-3 text-gray-700 shadow-md hover:bg-[var(--accent-color)] hover:text-white/90 hover:scale-110 transition"
+                className="cursor-pointer border-0 box-border h-12 w-12 bg-white rounded-full p-3 text-gray-700 shadow-md active:scale-95 transition"
                 onClick={() => handleNext()}
               >
-                <span className="flex ml-0.5 mt-0.25">{NextIcon}</span>
+                <span className="flex pl-0.5 pt-0.25 h-full">{NextIcon}</span>
               </button>
             </div>
             <div className="max-w-full w-80">
@@ -296,6 +294,7 @@ const AudioListItem = ({
 
 const PrevIcon = (
   <svg
+    className="max-w-full max-h-full h-full"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
     viewBox="0 0 512 512"
@@ -306,6 +305,7 @@ const PrevIcon = (
 
 const NextIcon = (
   <svg
+    className="max-w-full max-h-full h-full"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
     viewBox="0 0 512 512"
@@ -316,7 +316,7 @@ const NextIcon = (
 
 const PlayIcon = (
   <svg
-    className="max-w-full max-h-full"
+    className="max-w-full max-h-full h-full"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
     viewBox="0 0 384 512"
@@ -327,7 +327,7 @@ const PlayIcon = (
 
 const PauseIcon = (
   <svg
-    className="max-w-full max-h-full"
+    className="max-w-full max-h-full h-full"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
     viewBox="0 0 320 512"
