@@ -13,6 +13,8 @@ export default function Header() {
   const { isLoading, session, error } = useSessionContext();
   const supabaseClient = useSupabaseClient();
 
+  console.log(session);
+
   useEffect(() => {
     if (!isLoading && !session && document.location.pathname !== "/auth") {
       document.location.href = "/auth";

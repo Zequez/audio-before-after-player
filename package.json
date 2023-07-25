@@ -28,6 +28,7 @@
     "encoding": "^0.1.13",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.2",
+    "javascript-time-ago": "^2.5.9",
     "lodash": "^4.17.21",
     "next": "13.4.10",
     "postcss": "8.4.23",
