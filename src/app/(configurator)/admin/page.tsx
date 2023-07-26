@@ -45,7 +45,7 @@ export default function Page() {
     if (session && status !== "success") {
       (async () => {
         const response = await fetch(
-          `http://localhost:3030/api/users?token=${session.access_token}`
+          `/api/users?token=${session.access_token}`
         );
         if (response.status === 200) {
           const { users } = await response.json();
